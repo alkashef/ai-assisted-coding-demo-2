@@ -1,7 +1,7 @@
-/* detail.css: the panels, the failure notice and the job view in the main area.
-   Styles: the selection panels, the crash panel, the failure notice, the page head and the ranked
-   candidate cards. Does not style the page layout or the navigation (layout.css). Later views add
-   their lists here. */
+/* detail.css: the panels, the failure notice, the job view and the candidate view in the main area.
+   Styles: the selection panels, the crash panel, the failure notice, the page head, the ranked
+   candidate cards, and the candidate view (attributes, ranked job descriptions, raw CV text). Does
+   not style the page layout or the navigation (layout.css). */
 
 .panel {
   margin: 0 0 var(--space-4);
@@ -239,4 +239,81 @@
   border-radius: 999px;
   background: var(--color-hover);
   font-size: var(--size-small);
+}
+
+.detail {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--space-4);
+}
+
+.detail-side {
+  flex: 1 1 360px;
+  min-width: 0;
+}
+
+.detail-cv {
+  flex: 1 1 360px;
+  min-width: 0;
+}
+
+.ranking {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ranking-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.ranking-rank {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--color-accent-bg);
+  color: var(--color-accent);
+  font-weight: 700;
+}
+
+.ranking-title {
+  flex: 1;
+  min-width: 0;
+  color: var(--color-accent);
+}
+
+.ranking-score {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.doc {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+}
+
+.doc-summary {
+  margin: 0;
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--color-border);
+  font-size: var(--size-heading);
+}
+
+.doc-text {
+  margin: 0;
+  padding: var(--space-4);
+  max-width: var(--measure);
+  font: var(--size-small) / 1.6 var(--font-mono);
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
 }

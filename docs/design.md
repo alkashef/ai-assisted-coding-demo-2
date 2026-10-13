@@ -92,7 +92,7 @@ Create a folder only when it is listed here, and update this table in the same c
 | --- | --- |
 | `src/` | All source code: the flat modules in section 2.1. |
 | `src/api/` | The FastAPI app factory, routers and response models. |
-| `src/web/` | The front end. `index.html` (with `<template>` elements), `css/` (`theme.css`, `base.css`, `layout.css`, `detail.css`) and `js/` (`main.js`, `config.js`, `log.js`, `api.js`, `format.js`, `list-view.js`, `job-view.js`, `candidate-view.js`, `failures-view.js`). |
+| `src/web/` | The front end. `index.html` (with `<template>` elements), `css/` (`theme.css`, `base.css`, `layout.css`, `detail.css`) and `js/` (`main.js`, `config.js`, `log.js`, `api.js`, `format.js`, `attribute-fill.js`, `list-view.js`, `job-view.js`, `candidate-view.js`, `failures-view.js`). |
 | `tests/` | `unit/` (one test file per source module, plus `format.test.js`), `e2e/` (the API with a fake workspace and a fake LLM) and `e2e/ui/` (headless-browser tests). |
 | `docs/` | Workflow, spec, design, and plan. |
 | `docs/frontend/` | The UI mockups (`*.dc.html`, `mockup.css`) and `README.md`, the visual reference for `src/web/`. |

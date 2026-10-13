@@ -7,6 +7,7 @@
 
 import { api } from "./api.js";
 import { config } from "./config.js";
+import { renderCandidateNotFound, renderCandidateView } from "./candidate-view.js";
 import { renderFailures, showCrash } from "./failures-view.js";
 import { renderJobView } from "./job-view.js";
 import {
@@ -39,18 +40,11 @@ function handleCrash(error) {
 }
 
 /**
- * Shows the view that the address names, and hides the "select an item" panel when there is one.
- * @param {import("./api.js").JobSummary[]} jobs The job descriptions, for the titles.
+ * Shows the job view of a job description, unless the address moved on while the data loaded.
+ * @param {import("./api.js").JobSummary} job The selected job description.
  * @returns {Promise<void>}
  */
-async function showSelection(jobs) {
-  const route = parseRoute(location.hash);
-  const job = route?.kind === "jobs" ? jobs.find((item) => item.id === route.id) : undefined;
-  required("[data-empty]").hidden = job !== undefined;
-  if (route === null || job === undefined) {
-    required("[data-view]").replaceChildren();
-    return;
-  }
+async function showJob(job) {
   const ranked = await api.listRankedCandidates(job.id);
   if (parseRoute(location.hash)?.id !== job.id) {
     return;
@@ -60,6 +54,49 @@ async function showSelection(jobs) {
     card: /** @type {HTMLTemplateElement} */ (required("#candidate-card-template")),
   };
   renderJobView(required("[data-view]"), templates, job, ranked);
+}
+
+/**
+ * Shows the candidate view, or the not-found panel for an unknown ID, unless the address moved on
+ * while the data loaded.
+ * @param {string} candidateId The candidate ID from the address.
+ * @returns {Promise<void>}
+ */
+async function showCandidate(candidateId) {
+  const candidate = await api.getCandidate(candidateId);
+  const jobs = candidate === null ? [] : await api.listRankedJobs(candidateId);
+  if (parseRoute(location.hash)?.id !== candidateId) {
+    return;
+  }
+  const templates = {
+    view: /** @type {HTMLTemplateElement} */ (required("#candidate-view-template")),
+    job: /** @type {HTMLTemplateElement} */ (required("#ranked-job-template")),
+    notFound: /** @type {HTMLTemplateElement} */ (required("#candidate-not-found-template")),
+  };
+  const host = required("[data-view]");
+  if (candidate === null) {
+    renderCandidateNotFound(host, templates, candidateId);
+  } else {
+    renderCandidateView(host, templates, candidate, jobs);
+  }
+}
+
+/**
+ * Shows the view that the address names, and hides the "select an item" panel when there is one.
+ * @param {import("./api.js").JobSummary[]} jobs The job descriptions, for the titles.
+ * @returns {Promise<void>}
+ */
+async function showSelection(jobs) {
+  const route = parseRoute(location.hash);
+  const job = route?.kind === "jobs" ? jobs.find((item) => item.id === route.id) : undefined;
+  required("[data-empty]").hidden = job !== undefined || route?.kind === "candidates";
+  if (job !== undefined) {
+    await showJob(job);
+  } else if (route?.kind === "candidates") {
+    await showCandidate(route.id);
+  } else {
+    required("[data-view]").replaceChildren();
+  }
 }
 
 /**

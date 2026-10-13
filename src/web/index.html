@@ -137,5 +137,69 @@
         </details>
       </li>
     </template>
+    <template id="candidate-view-template">
+      <div class="page-head">
+        <h2 class="page-head-title" data-field="title"></h2>
+        <p class="page-head-meta" data-field="meta"></p>
+      </div>
+      <div class="detail">
+        <div class="detail-side">
+          <section class="panel">
+            <h3 class="panel-title">Attributes</h3>
+            <dl class="facts facts-panel">
+              <dt class="facts-label">Current job title</dt>
+              <dd class="facts-value" data-fact="title"></dd>
+              <dt class="facts-label">Current address</dt>
+              <dd class="facts-value" data-fact="address"></dd>
+              <dt class="facts-label">Highest degree</dt>
+              <dd class="facts-value" data-fact="degree"></dd>
+              <dt class="facts-label">Skills</dt>
+              <dd class="facts-value"><ul class="chips" data-fact="skills"></ul></dd>
+              <dt class="facts-label">Countries worked in</dt>
+              <dd class="facts-value" data-fact="countries"></dd>
+              <dt class="facts-label">Companies</dt>
+              <dd class="facts-value" data-fact="companies"></dd>
+              <dt class="facts-label">Last job</dt>
+              <dd class="facts-value" data-fact="last-job"></dd>
+              <dt class="facts-label">Total employment</dt>
+              <dd class="facts-value" data-stat="total"></dd>
+              <dt class="facts-label">Jobs held</dt>
+              <dd class="facts-value" data-stat="jobs"></dd>
+              <dt class="facts-label">Average per job</dt>
+              <dd class="facts-value" data-stat="average"></dd>
+              <dt class="facts-label">Employment gaps</dt>
+              <dd class="facts-value" data-stat="gaps"></dd>
+              <dt class="facts-label">Since graduation</dt>
+              <dd class="facts-value" data-stat="graduation"></dd>
+              <dt class="facts-label">Currently employed</dt>
+              <dd class="facts-value" data-stat="employed"></dd>
+            </dl>
+          </section>
+          <section class="panel">
+            <h3 class="panel-title">Job descriptions ranked for this candidate</h3>
+            <ol class="ranking" data-ranking></ol>
+          </section>
+        </div>
+        <section class="doc detail-cv">
+          <h3 class="doc-summary">CV text</h3>
+          <pre class="doc-text doc-text-cv" data-field="cv-text"></pre>
+        </section>
+      </div>
+    </template>
+
+    <template id="ranked-job-template">
+      <li class="ranking-item">
+        <span class="ranking-rank"></span>
+        <a class="ranking-title" href="#"></a>
+        <span class="ranking-score"></span>
+      </li>
+    </template>
+
+    <template id="candidate-not-found-template">
+      <section class="panel">
+        <h2 class="panel-title">Candidate not found</h2>
+        <p class="panel-text" data-field="text"></p>
+      </section>
+    </template>
   </body>
 </html>

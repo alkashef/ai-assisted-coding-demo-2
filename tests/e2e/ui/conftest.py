@@ -106,7 +106,7 @@ def _ranked_workspace() -> Workspace:
             ),
         },
         ranked_candidates={"j1.txt": (("a.txt", 0.7123), ("c.txt", 0.4), ("b.txt", None))},
-        ranked_jobs={},
+        ranked_jobs={"a.txt": (("j1.txt", 0.7123),)},
         recommendations={
             ("j1.txt", "a.txt"): Recommendation(True, "Strong reporting background."),
             ("j1.txt", "c.txt"): Recommendation(False, "No analytics experience."),
