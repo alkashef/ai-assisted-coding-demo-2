@@ -6,7 +6,11 @@ import {
   displayText,
   formatAverageMonths,
   formatGaps,
+  formatLastJob,
   formatMonths,
+  formatParts,
+  formatScore,
+  formatYesNo,
 } from "../../src/web/js/format.js";
 
 test("test_mis_001_null_renders_as_not_available", () => {
@@ -38,4 +42,34 @@ test("test_cal_001_months_render_as_a_whole_number_with_a_unit", () => {
   assert.equal(formatMonths(106), "106 months");
   assert.equal(formatMonths(1), "1 month");
   assert.equal(formatMonths(0), "0 months");
+});
+
+test("test_rnk_003_score_renders_with_two_decimals", () => {
+  assert.equal(formatScore(0.7123), "0.71");
+  assert.equal(formatScore(null), "Not available");
+});
+
+test("test_cal_007_currently_employed_renders_yes_or_no", () => {
+  assert.equal(formatYesNo(true), "Yes");
+  assert.equal(formatYesNo(false), "No");
+  assert.equal(formatYesNo(null), "Not available");
+});
+
+test("test_mis_001_parts_skip_missing_values", () => {
+  assert.equal(formatParts(["Boston", null, "United States"]), "Boston, United States");
+  assert.equal(formatParts([null, undefined]), "Not available");
+});
+
+test("test_ext_009_last_job_renders_on_one_line", () => {
+  const job = {
+    title: "Analyst",
+    employer: "Acme",
+    city: null,
+    country: "Peru",
+    start: "2019-03",
+    end: null,
+    description: null,
+  };
+  assert.equal(formatLastJob(job), "Analyst at Acme, Peru. 2019-03 to Present.");
+  assert.equal(formatLastJob(null), "Not available");
 });

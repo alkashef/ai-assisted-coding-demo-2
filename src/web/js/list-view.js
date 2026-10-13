@@ -2,8 +2,8 @@
 /**
  * @module list-view
  * Owns the navigation lists: fills them from the API data (LST-001, LST-002), marks the current
- * item and folds the navigation at phone width. Does not call the API and does not show the
- * selected view (job-view.js and candidate-view.js do).
+ * item, reads the selection from the address and folds the navigation at phone width. Does not
+ * call the API and does not show the selected view (job-view.js and candidate-view.js do).
  */
 
 import { config } from "./config.js";
@@ -37,6 +37,22 @@ export function candidateEntries(candidates) {
     label: candidate.name,
     href: config.routes.candidates + encodeURIComponent(candidate.id),
   }));
+}
+
+/**
+ * Reads the selected item from the address hash.
+ * @param {string} hash The address hash, such as "#/jobs/j1.txt".
+ * @returns {{ kind: "jobs" | "candidates", id: string } | null} The selection, or `null` when
+ *   the hash names none.
+ */
+export function parseRoute(hash) {
+  for (const kind of /** @type {const} */ (["jobs", "candidates"])) {
+    const prefix = config.routes[kind];
+    if (hash.startsWith(prefix) && hash.length > prefix.length) {
+      return { kind, id: decodeURIComponent(hash.slice(prefix.length)) };
+    }
+  }
+  return null;
 }
 
 /**

@@ -8,7 +8,15 @@
 import { api } from "./api.js";
 import { config } from "./config.js";
 import { renderFailures, showCrash } from "./failures-view.js";
-import { candidateEntries, foldOnPhone, jobEntries, markCurrent, renderList } from "./list-view.js";
+import { renderJobView } from "./job-view.js";
+import {
+  candidateEntries,
+  foldOnPhone,
+  jobEntries,
+  markCurrent,
+  parseRoute,
+  renderList,
+} from "./list-view.js";
 import { logError, logInfo } from "./log.js";
 
 /**
@@ -31,7 +39,47 @@ function handleCrash(error) {
 }
 
 /**
- * Loads the lists and the failure notice, then keeps the current item marked.
+ * Shows the view that the address names, and hides the "select an item" panel when there is one.
+ * @param {import("./api.js").JobSummary[]} jobs The job descriptions, for the titles.
+ * @returns {Promise<void>}
+ */
+async function showSelection(jobs) {
+  const route = parseRoute(location.hash);
+  const job = route?.kind === "jobs" ? jobs.find((item) => item.id === route.id) : undefined;
+  required("[data-empty]").hidden = job !== undefined;
+  if (route === null || job === undefined) {
+    required("[data-view]").replaceChildren();
+    return;
+  }
+  const ranked = await api.listRankedCandidates(job.id);
+  if (parseRoute(location.hash)?.id !== job.id) {
+    return;
+  }
+  const templates = {
+    view: /** @type {HTMLTemplateElement} */ (required("#job-view-template")),
+    card: /** @type {HTMLTemplateElement} */ (required("#candidate-card-template")),
+  };
+  renderJobView(required("[data-view]"), templates, job, ranked);
+}
+
+/**
+ * Fills the navigation lists and starts keeping the current item marked.
+ * @param {import("./api.js").JobSummary[]} jobs The job descriptions.
+ * @param {import("./api.js").CandidateSummary[]} candidates The candidates.
+ * @returns {void}
+ */
+function showNavigation(jobs, candidates) {
+  const items = /** @type {HTMLTemplateElement} */ (required("#nav-item-template"));
+  renderList(required("[data-group='jobs']"), items, jobEntries(jobs));
+  renderList(required("[data-group='candidates']"), items, candidateEntries(candidates));
+  const nav = required("[data-nav]");
+  foldOnPhone(/** @type {HTMLDetailsElement} */ (required("[data-nav-fold]")), config.phoneQuery);
+  markCurrent(nav, location.hash);
+  window.addEventListener("hashchange", () => markCurrent(nav, location.hash));
+}
+
+/**
+ * Loads the lists and the failure notice, then shows the selected view.
  * @returns {Promise<void>}
  */
 async function start() {
@@ -40,15 +88,11 @@ async function start() {
     api.listCandidates(),
     api.listFailures(),
   ]);
-  const items = /** @type {HTMLTemplateElement} */ (required("#nav-item-template"));
-  renderList(required("[data-group='jobs']"), items, jobEntries(jobs));
-  renderList(required("[data-group='candidates']"), items, candidateEntries(candidates));
+  showNavigation(jobs, candidates);
   const notice = /** @type {HTMLTemplateElement} */ (required("#failure-notice-template"));
   renderFailures(required("[data-notices]"), notice, failures);
-  const nav = required("[data-nav]");
-  foldOnPhone(/** @type {HTMLDetailsElement} */ (required("[data-nav-fold]")), config.phoneQuery);
-  markCurrent(nav, location.hash);
-  window.addEventListener("hashchange", () => markCurrent(nav, location.hash));
+  await showSelection(jobs);
+  window.addEventListener("hashchange", () => showSelection(jobs).catch(handleCrash));
   logInfo(`Loaded ${jobs.length} job descriptions and ${candidates.length} candidates`);
 }
 

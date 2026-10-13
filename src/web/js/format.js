@@ -65,3 +65,50 @@ export function formatGaps(gaps) {
   const unit = gaps.length === 1 && gaps[0] === 1 ? "month" : "months";
   return `${count}: ${gaps.join(", ")} ${unit}`;
 }
+
+/**
+ * Formats a similarity score with two decimals (RNK-003).
+ * @param {number | null | undefined} score The score, or `null` without a vector (MIS-002).
+ * @returns {string} For example "0.71", or "Not available".
+ */
+export function formatScore(score) {
+  return score === null || score === undefined ? config.notAvailableText : score.toFixed(2);
+}
+
+/**
+ * Formats a yes-or-no value (CAL-007).
+ * @param {boolean | null | undefined} value The value from the JSON.
+ * @returns {string} "Yes", "No" or "Not available".
+ */
+export function formatYesNo(value) {
+  if (value === null || value === undefined) {
+    return config.notAvailableText;
+  }
+  return value ? "Yes" : "No";
+}
+
+/**
+ * Joins the parts that exist with ", ".
+ * @param {(string | null | undefined)[]} parts Text parts, some of them missing.
+ * @returns {string} The joined parts, or "Not available" when none exists.
+ */
+export function formatParts(parts) {
+  const present = parts.filter((part) => part !== null && part !== undefined && part !== "");
+  return present.length === 0 ? config.notAvailableText : present.join(", ");
+}
+
+/**
+ * Formats the last job of a CV on one line (EXT-009).
+ * @param {import("./api.js").LastJob | null | undefined} job The last job.
+ * @returns {string} Title, employer, place, period and description, or "Not available".
+ */
+export function formatLastJob(job) {
+  if (job === null || job === undefined) {
+    return config.notAvailableText;
+  }
+  const role = [displayText(job.title), displayText(job.employer)].join(" at ");
+  const place = formatParts([job.city, job.country]);
+  const period = `${job.start} to ${job.end ?? "Present"}`;
+  const description = job.description === null ? "" : ` ${job.description}`;
+  return `${role}, ${place}. ${period}.${description}`;
+}

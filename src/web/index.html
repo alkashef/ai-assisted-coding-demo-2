@@ -40,7 +40,8 @@
             <h2 class="panel-title">Something went wrong</h2>
             <pre class="panel-error-text" data-crash-text></pre>
           </section>
-          <section class="panel">
+          <div data-view></div>
+          <section class="panel" data-empty>
             <h2 class="panel-title">Select an item to start</h2>
             <p class="panel-text">
               Select a job description to see all candidates ranked by how well they match it.
@@ -66,6 +67,75 @@
         <summary class="notice-summary"></summary>
         <ul class="notice-list"></ul>
       </details>
+    </template>
+    <template id="job-view-template">
+      <div class="page-head">
+        <h2 class="page-head-title" data-field="title"></h2>
+        <p class="page-head-meta" data-field="meta"></p>
+      </div>
+      <ol class="cards" data-cards></ol>
+    </template>
+
+    <template id="candidate-card-template">
+      <li class="card">
+        <div class="card-head">
+          <span class="card-rank"></span>
+          <div class="card-who">
+            <h3 class="card-name"><a href="#"></a></h3>
+            <p class="card-sub"></p>
+          </div>
+          <div class="card-score">
+            <span class="card-score-label">Similarity</span>
+            <span class="card-score-value"></span>
+          </div>
+          <span class="badge"></span>
+        </div>
+        <p class="card-reason"></p>
+        <dl class="card-stats">
+          <div class="stat">
+            <dt class="stat-label">Total employment</dt>
+            <dd class="stat-value" data-stat="total"></dd>
+          </div>
+          <div class="stat">
+            <dt class="stat-label">Jobs held</dt>
+            <dd class="stat-value" data-stat="jobs"></dd>
+          </div>
+          <div class="stat">
+            <dt class="stat-label">Average per job</dt>
+            <dd class="stat-value" data-stat="average"></dd>
+          </div>
+          <div class="stat">
+            <dt class="stat-label">Employment gaps</dt>
+            <dd class="stat-value" data-stat="gaps"></dd>
+          </div>
+          <div class="stat">
+            <dt class="stat-label">Currently employed</dt>
+            <dd class="stat-value" data-stat="employed"></dd>
+          </div>
+          <div class="stat">
+            <dt class="stat-label">Since graduation</dt>
+            <dd class="stat-value" data-stat="graduation"></dd>
+          </div>
+        </dl>
+        <p class="card-last-job"><strong>Last job.</strong> <span data-field="last-job"></span></p>
+        <details class="card-more">
+          <summary class="card-more-summary">More attributes</summary>
+          <dl class="facts">
+            <dt class="facts-label">Current job title</dt>
+            <dd class="facts-value" data-fact="title"></dd>
+            <dt class="facts-label">Current address</dt>
+            <dd class="facts-value" data-fact="address"></dd>
+            <dt class="facts-label">Highest degree</dt>
+            <dd class="facts-value" data-fact="degree"></dd>
+            <dt class="facts-label">Countries worked in</dt>
+            <dd class="facts-value" data-fact="countries"></dd>
+            <dt class="facts-label">Companies</dt>
+            <dd class="facts-value" data-fact="companies"></dd>
+            <dt class="facts-label">Skills</dt>
+            <dd class="facts-value"><ul class="chips" data-fact="skills"></ul></dd>
+          </dl>
+        </details>
+      </li>
     </template>
   </body>
 </html>
