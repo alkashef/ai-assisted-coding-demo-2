@@ -1,0 +1,45 @@
+{
+  "editor.formatOnSave": true,
+  "files.encoding": "utf8",
+  "files.eol": "\n",
+  "[python]": {
+    "editor.defaultFormatter": "charliermarsh.ruff",
+    "editor.codeActionsOnSave": {
+      "source.fixAll.ruff": "explicit",
+      "source.organizeImports.ruff": "explicit"
+    }
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": "explicit"
+    }
+  },
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[css]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "terminal.integrated.profiles.windows": {
+    "cmd (ai-assisted-coding-demo-2)": {
+      "path": "${env:windir}\\System32\\cmd.exe",
+      "args": ["/K", "conda activate ai-assisted-coding-demo-2"],
+      "icon": "terminal-cmd"
+    }
+  },
+  "terminal.integrated.defaultProfile.windows": "cmd (ai-assisted-coding-demo-2)",
+  "mypy-type-checker.args": ["--config-file=mypy.ini"],
+  "python.testing.pytestEnabled": true,
+  "python.testing.pytestArgs": ["tests"],
+  "search.exclude": {
+    "**/models": true,
+    "**/data": true,
+    "**/site": true
+  },
+  "files.watcherExclude": {
+    "**/models/**": true,
+    "**/data/**": true,
+    "**/node_modules/**": true
+  }
+}
