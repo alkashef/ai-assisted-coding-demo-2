@@ -9,7 +9,6 @@ history is the record. Template: `docs/workflow.md`.
 
 | Milestone | Description | Model | Effort | Status |
 | --- | --- | --- | --- | --- |
-| **M5** Vector store and ranking | Chroma collection, cosine nearest, items without a vector ranked last | sonnet | high | open |
 | **M6** Start-up pipeline | Embed, extract, calculate, rank both ways and recommend; a failed call is recorded and the rest continue | opus | high | open |
 | **M7** API app and lists | App factory on loopback, `/health`, job and candidate lists, failure list | sonnet | medium | open |
 | **M8** API ranked views | Ranked candidates for a job, candidate detail, ranked jobs, 404 for an unknown ID | sonnet | medium | open |
@@ -20,14 +19,6 @@ history is the record. Template: `docs/workflow.md`.
 | **M13** Candidate view UI | Raw CV, attributes and ranked job descriptions | sonnet | medium | open |
 
 ## Milestones
-
-### M5 — Vector store and ranking
-
-- **Refs:** RNK-001, MIS-002; DEC-004, DEC-011, design section 5 (Chroma risk).
-- **Owner:** `src/vector_store.py`, `src/ranking.py`; `requirements.txt` (`chromadb`).
-- **Tests first:** in `tests/unit/test_vector_store.py`: `test_rnk_001_nearest_orders_items_by_cosine_similarity`, `test_rnk_001_nearest_returns_every_stored_item`, `test_rnk_001_ties_are_ordered_by_item_id`, `test_dec_004_chroma_telemetry_is_disabled`, `test_dec_004_vectors_are_supplied_so_no_embedding_model_is_used`. In `tests/unit/test_ranking.py`: `test_mis_002_item_without_a_score_is_ranked_last`, `test_mis_002_unscored_items_are_ordered_by_id`, `test_mis_002_no_item_is_dropped`.
-- **Build:** `ChromaVectorStore` implements `VectorIndex` with an in-memory Chroma client, telemetry off, cosine similarity, and our own vectors; `ranking.py` appends the unscored items. Check the pinned version's documentation for the cosine setting and the default embedding function, and use only calls that exist in it.
-- **Gate:** the tests and the checks pass; the report states what was checked about the default model, telemetry and the cosine setting; `chromadb` is pinned.
 
 ### M6 — Start-up pipeline
 
