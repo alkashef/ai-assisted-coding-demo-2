@@ -1,8 +1,9 @@
 # Direct dependencies only, each pinned with == to the installed version.
-# Add pytest-asyncio, pinned the same way, if the project has async code.
 pytest==9.1.1
 pytest-cov==7.1.0
 mypy==2.4.0
 ruff==0.17.0
 python-dotenv==1.2.4
 pydantic==2.14.1
+openai==3.29.0
+pytest-asyncio==1.4.0

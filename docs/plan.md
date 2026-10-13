@@ -9,7 +9,6 @@ history is the record. Template: `docs/workflow.md`.
 
 | Milestone | Description | Model | Effort | Status |
 | --- | --- | --- | --- | --- |
-| **M4** OpenAI client | The only module that calls OpenAI: structured replies and embeddings, errors wrapped as `LlmError` | sonnet | high | open |
 | **M5** Vector store and ranking | Chroma collection, cosine nearest, items without a vector ranked last | sonnet | high | open |
 | **M6** Start-up pipeline | Embed, extract, calculate, rank both ways and recommend; a failed call is recorded and the rest continue | opus | high | open |
 | **M7** API app and lists | App factory on loopback, `/health`, job and candidate lists, failure list | sonnet | medium | open |
@@ -21,14 +20,6 @@ history is the record. Template: `docs/workflow.md`.
 | **M13** Candidate view UI | Raw CV, attributes and ranked job descriptions | sonnet | medium | open |
 
 ## Milestones
-
-### M4 — OpenAI client
-
-- **Refs:** NFR-001, NFR-002, ERR-001; DEC-003, DEC-006, DEC-011, design section 4 (ports).
-- **Owner:** `src/llm_client.py`; `requirements.txt` (`openai`, `pytest-asyncio`).
-- **Tests first:** in `tests/unit/test_llm_client.py` (async, with a fake SDK object): `test_nfr_001_client_is_built_with_the_configured_base_url`, `test_nfr_001_completion_sends_only_the_given_system_and_user_text`, `test_err_001_provider_error_becomes_llm_error_naming_the_operation_and_model`, `test_err_001_refusal_raises_llm_output_error_with_the_raw_output`, `test_nfr_002_llm_error_message_excludes_the_api_key`, `test_dec_003_complete_returns_an_instance_of_the_schema`, `test_dec_003_embed_returns_the_vector_for_the_text`.
-- **Build:** one class that implements `StructuredCompleter` and `Embedder` with the official async SDK: a strict structured reply into the given schema, and an embedding call. Model IDs, base URL, key, token limit and timeout come in as typed settings. Wrap each provider exception in `LlmError` with context and the original error chained. Before using any SDK call, read the pinned version's documentation and use only calls that exist in it. Pin both libraries.
-- **Gate:** the tests and the checks pass; no test uses the network; the report says which SDK calls were used and that the model IDs are untested until the live check in M10.
 
 ### M5 — Vector store and ranking
 
