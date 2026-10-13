@@ -50,6 +50,7 @@ def _facts_reply(start: str = "2018-05") -> CvFactsReply:
         country="Freedonia",
         start=start,
         end=None,
+        is_current=True,
         description="Built reports.",
     )
     return CvFactsReply(

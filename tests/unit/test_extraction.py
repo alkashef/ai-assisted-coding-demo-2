@@ -8,7 +8,9 @@ from src.records import YearMonth
 TEMPLATE = "Extract the facts.\n---\n{{CV_TEXT}}\n---\nAnswer in JSON."
 
 
-def make_job_reply(start: str = "2018-05", end: str | None = "2020-01") -> JobReply:
+def make_job_reply(
+    start: str = "2018-05", end: str | None = "2020-01", is_current: bool = False
+) -> JobReply:
     return JobReply(
         title="Data Analyst",
         employer="Example Corp",
@@ -16,6 +18,7 @@ def make_job_reply(start: str = "2018-05", end: str | None = "2020-01") -> JobRe
         country="Freedonia",
         start=start,
         end=end,
+        is_current=is_current,
         description="Built weekly reports.",
     )
 
@@ -112,7 +115,7 @@ def test_mis_001_null_reply_field_becomes_none():
 
 
 def test_mis_001_null_job_end_becomes_none():
-    reply = make_reply(jobs=[make_job_reply(end=None)])
+    reply = make_reply(jobs=[make_job_reply(end=None, is_current=True)])
 
     assert facts_from_reply(reply).jobs[0].end is None
 
@@ -133,3 +136,25 @@ def test_ext_002_bad_date_raises_llm_output_error_with_the_raw_output(bad_date: 
         facts_from_reply(reply)
 
     assert error.value.raw_output == reply.model_dump_json()
+
+
+def test_dec_015_current_marker_with_an_end_is_refused():
+    reply = make_reply(jobs=[make_job_reply(end="2020-01", is_current=True)])
+
+    with pytest.raises(LlmOutputError) as error:
+        facts_from_reply(reply)
+
+    assert error.value.raw_output == reply.model_dump_json()
+
+
+def test_dec_015_reply_is_current_flows_into_the_job():
+    reply = make_reply(
+        jobs=[
+            make_job_reply(end=None, is_current=True),
+            make_job_reply(end=None, is_current=False),
+        ]
+    )
+
+    jobs = facts_from_reply(reply).jobs
+
+    assert [job.is_current for job in jobs] == [True, False]

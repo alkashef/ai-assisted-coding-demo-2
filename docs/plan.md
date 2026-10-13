@@ -9,7 +9,6 @@ history is the record. Template: `docs/workflow.md`.
 
 | Milestone | Description | Model | Effort | Status |
 | --- | --- | --- | --- | --- |
-| **M16** End states and impossible dates | `Job.is_current`, the extraction reply, and the "Not available" rules in `attributes.py` (CAL-007, CAL-009, CAL-010, DEC-015) | sonnet | high | open |
 | **M17** Show the unknown end | `is_current` in the API's last job, the recommendation facts, and the page ("Present" or "Not available") (DEC-015) | sonnet | medium | open |
 | **M18** Prompt isolation | Prompt files become system text, and the documents go in as tagged, escaped user text (DEC-016) | opus | high | open |
 | **M19** Job description text | `GET /api/jobs/{job_id}` and the foldable text panel above the candidates (JOB-003, DEC-020) | sonnet | medium | open |
@@ -18,14 +17,6 @@ history is the record. Template: `docs/workflow.md`.
 | **M22** Gold file draft | Drafts `data/sample/gold_jobs.json` from the 10 sample CVs, with a `.gitignore` exception (NFR-005, DEC-017) | sonnet | high | open |
 
 ## Milestones
-
-### M16 — End states and impossible dates
-
-- **Refs:** CAL-007, CAL-009, CAL-010, CAL-002, EX-001, EX-003, EX-004, MIS-001, DEC-015.
-- **Owner:** `src/records.py`, `src/llm_schemas.py`, `src/extraction.py`, `src/attributes.py`, `prompts/extract_cv.md`.
-- **Tests first:** in `tests/unit/test_attributes.py`: `test_cal_007_current_marker_gives_yes`, `test_cal_007_end_date_gives_no`, `test_cal_007_unknown_end_is_not_available` (EX-003), `test_cal_009_unknown_end_makes_average_and_gaps_not_available` (EX-003), `test_cal_002_job_count_unaffected_by_bad_or_unknown_dates`, `test_cal_010_reversed_range_makes_dependents_not_available` (EX-004 a), `test_cal_010_future_job_date_makes_dependents_not_available`, `test_cal_010_future_graduation_makes_time_since_graduation_not_available` (EX-004 b), `test_cal_001_ex_001_values_unchanged`. In `tests/unit/test_extraction.py`: `test_dec_015_current_marker_with_an_end_is_refused`, `test_dec_015_reply_is_current_flows_into_the_job`.
-- **Build:** `Job` gets `is_current`; `JobReply` gets a required `is_current`; `extraction.py` refuses a reply with `is_current` true and an `end` (`LlmOutputError` with the raw output); `attributes.py` applies the rules in design section 3 ("Rules for the calculations"); `prompts/extract_cv.md` states that `is_current` is true only when the CV marks the job current and that a year-only end is `null` with `is_current` false. Update every existing test and fake that builds a `Job`. The tests that cite CAL-007 change because the requirement changed: say so in the report.
-- **Gate:** the tests and the checks pass; EX-001, EX-003 and EX-004 pass as written in the spec; the report lists the changed CAL-007 tests.
 
 ### M17 — Show the unknown end
 

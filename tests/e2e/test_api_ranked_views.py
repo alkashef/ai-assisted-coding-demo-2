@@ -19,8 +19,17 @@ from src.records import (
 
 def _facts(name: str | None, country: str | None = "Egypt") -> CvFacts:
     jobs = (
-        Job("Analyst", "Acme", "Cairo", "Egypt", YearMonth(2015, 1), YearMonth(2017, 12), "Old"),
-        Job("Lead", "Beta", "Cairo", country, YearMonth(2018, 5), None, "Current"),
+        Job(
+            "Analyst",
+            "Acme",
+            "Cairo",
+            "Egypt",
+            YearMonth(2015, 1),
+            YearMonth(2017, 12),
+            False,
+            "Old",
+        ),
+        Job("Lead", "Beta", "Cairo", country, YearMonth(2018, 5), None, True, "Current"),
     )
     return CvFacts(
         name=name,

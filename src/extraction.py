@@ -2,7 +2,8 @@
 
 Pure and synchronous. It does not call the LLM (`llm_client.py` does) or read the prompt file
 (`file_reader.py` does). Implements EXT-002, EXT-003, EXT-004, EXT-006, EXT-009, EXT-010 and
-MIS-001 (DEC-005). A date that is not `YYYY-MM` raises `LlmOutputError` (no repair, no retry).
+MIS-001 (DEC-005, DEC-015). A date that is not `YYYY-MM`, or a current job with an end, raises
+`LlmOutputError` (no repair, no retry).
 """
 
 import re
@@ -39,7 +40,8 @@ def facts_from_reply(reply: CvFactsReply) -> CvFacts:
         The facts. A `null` in the reply is `None` (MIS-001).
 
     Raises:
-        LlmOutputError: A date in the reply is not `YYYY-MM`. The error carries the reply as JSON.
+        LlmOutputError: A date in the reply is not `YYYY-MM`, or a job is current and has an
+            end. The error carries the reply as JSON.
     """
     raw_output = reply.model_dump_json()
     return CvFacts(
@@ -55,7 +57,13 @@ def facts_from_reply(reply: CvFactsReply) -> CvFacts:
 
 
 def _job_from_reply(job: JobReply, raw_output: str) -> Job:
-    """Turns one job in the reply into a job record."""
+    """Turns one job in the reply into a job record.
+
+    Raises:
+        LlmOutputError: The job is marked current and also has an end (DEC-015).
+    """
+    if job.is_current and job.end is not None:
+        raise LlmOutputError("Extraction reply has a current job with an end date", raw_output)
     return Job(
         title=job.title,
         employer=job.employer,
@@ -63,6 +71,7 @@ def _job_from_reply(job: JobReply, raw_output: str) -> Job:
         country=job.country,
         start=_required_month(job.start, raw_output),
         end=_optional_month(job.end, raw_output),
+        is_current=job.is_current,
         description=job.description,
     )
 

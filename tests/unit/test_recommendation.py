@@ -21,6 +21,7 @@ def make_facts() -> CvFacts:
                 country="Freedonia",
                 start=YearMonth(2018, 5),
                 end=None,
+                is_current=True,
                 description="Built weekly reports.",
             ),
         ),

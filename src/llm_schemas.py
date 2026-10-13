@@ -18,7 +18,7 @@ class _Reply(BaseModel):
 
 
 class JobReply(_Reply):
-    """One job in a CV. A `null` end means "Present"."""
+    """One job in a CV. `is_current` is true only when the CV marks the job current (DEC-015)."""
 
     title: str | None
     employer: str | None
@@ -26,6 +26,7 @@ class JobReply(_Reply):
     country: str | None
     start: str
     end: str | None
+    is_current: bool
     description: str | None
 
 

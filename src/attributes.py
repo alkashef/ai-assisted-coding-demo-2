@@ -1,7 +1,8 @@
 """Calculate the attributes of a CV from its facts, and derive its lists.
 
 Pure date math. It does no I/O, reads no clock (the caller passes today's date) and calls no LLM.
-Implements CAL-001 to CAL-005, CAL-007, CAL-008 and EXT-007 to EXT-009 (DEC-005, design section 3).
+Implements CAL-001 to CAL-005, CAL-007 to CAL-010 and EXT-007 to EXT-009 (DEC-005, DEC-015, design
+section 3).
 """
 
 from datetime import date
@@ -43,6 +44,18 @@ def job_months(job: Job, today: date) -> int:
     return _inclusive_months(_month_index(job.start), _end_index(job, current))
 
 
+def _is_bad(job: Job, current: int) -> bool:
+    """Return whether the job ends before it starts or has a date after today (CAL-010)."""
+    start = _month_index(job.start)
+    end = None if job.end is None else _month_index(job.end)
+    return start > current or (end is not None and (end < start or end > current))
+
+
+def _has_unknown_end(job: Job) -> bool:
+    """Return whether the job has no end date and is not marked current (CAL-009)."""
+    return job.end is None and not job.is_current
+
+
 def _gaps(jobs: tuple[Job, ...], current: int) -> tuple[int, ...]:
     """Return the length of each gap between jobs, in start order (CAL-004).
 
@@ -60,12 +73,23 @@ def _gaps(jobs: tuple[Job, ...], current: int) -> tuple[int, ...]:
 
 
 def _months_since_graduation(facts: CvFacts, current: int) -> int | None:
-    """Return the months from the most recent graduation to now (CAL-005), or None."""
+    """Return the months from the most recent graduation to now (CAL-005), or None.
+
+    It is None when there is no graduation date or any graduation date is after today (CAL-010).
+    """
     graduations = [entry.graduated for entry in facts.education if entry.graduated is not None]
     if not graduations:
         return None
     latest = max(_month_index(month) for month in graduations)
-    return _inclusive_months(latest, current)
+    return None if latest > current else _inclusive_months(latest, current)
+
+
+def _currently_employed(facts: CvFacts, any_bad: bool) -> bool | None:
+    """Return whether the latest job is current (CAL-007), or None when it cannot be told."""
+    latest = last_job(facts)
+    if latest is None or any_bad or _has_unknown_end(latest):
+        return None
+    return latest.is_current
 
 
 def last_job(facts: CvFacts) -> Job | None:
@@ -109,28 +133,31 @@ def distinct_employers(facts: CvFacts) -> tuple[str, ...]:
 
 
 def calculate_attributes(facts: CvFacts, today: date) -> CalculatedAttributes:
-    """Calculate the attributes of one CV (CAL-001 to CAL-005 and CAL-007).
+    """Calculate the attributes of one CV (CAL-001 to CAL-005, CAL-007, CAL-009 and CAL-010).
 
     Args:
         facts: The facts of the CV.
         today: Today's date. The month of this date is "Present".
 
     Returns:
-        The attributes. A value that the facts cannot give is `None`, which is every job-based
-        value for a CV with no job, and the time since graduation for a CV with no graduation.
+        The attributes. A value that the facts cannot give is `None`: every job-based value for a
+        CV with no job, the time since graduation for a CV with no graduation, and the values that
+        a bad date or an unknown end makes unreliable (design section 3). The job count is `None`
+        only for a CV with no job.
     """
     current = _current_month(today)
     since_graduation = _months_since_graduation(facts, current)
     if not facts.jobs:
         return CalculatedAttributes(None, None, None, None, since_graduation, None)
+    any_bad = any(_is_bad(job, current) for job in facts.jobs)
+    any_unknown = any(_has_unknown_end(job) for job in facts.jobs)
     durations = [job_months(job, today) for job in facts.jobs]
     first_start = min(_month_index(job.start) for job in facts.jobs)
-    latest = last_job(facts)
     return CalculatedAttributes(
-        total_months=_inclusive_months(first_start, current),
+        total_months=None if any_bad else _inclusive_months(first_start, current),
         job_count=len(durations),
-        average_job_months=sum(durations) / len(durations),
-        gaps=_gaps(facts.jobs, current),
+        average_job_months=None if any_bad or any_unknown else sum(durations) / len(durations),
+        gaps=None if any_bad or any_unknown else _gaps(facts.jobs, current),
         months_since_graduation=since_graduation,
-        currently_employed=latest is not None and latest.end is None,
+        currently_employed=_currently_employed(facts, any_bad),
     )

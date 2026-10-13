@@ -27,7 +27,11 @@ class YearMonth:
 
 @dataclass(frozen=True)
 class Job:
-    """One job in a CV. A `None` end means "Present"."""
+    """One job in a CV.
+
+    A job with an `end` has ended. A job with no `end` and `is_current` is "Present". A job with
+    no `end` and not `is_current` has an unknown end (DEC-015).
+    """
 
     title: str | None
     employer: str | None
@@ -35,6 +39,7 @@ class Job:
     country: str | None
     start: YearMonth
     end: YearMonth | None
+    is_current: bool
     description: str | None
 
 

@@ -78,6 +78,7 @@ def _ranked_workspace() -> Workspace:
                 country="United States",
                 start=YearMonth(2019, 3),
                 end=None,
+                is_current=True,
                 description="Leads reporting pipelines.",
             ),
         ),
