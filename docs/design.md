@@ -199,7 +199,7 @@ Test boundaries:
 | Cost and rate limits for about 53 calls per start are unverified. The model IDs and the chat model's supported settings are unverified. | Nothing | User | Check current pricing, limits and the model page at first run. |
 | Playwright may not drive the installed Edge or Chrome without a download. | The UI test milestone | Plan | Check at first use. A browser download would need the user's approval. |
 | The web interface adds a server, a front end, checks for JavaScript and CSS, and a browser test per UI workflow, so it takes noticeably longer to build than a terminal menu. | The one-hour goal | User | The user chose the web page (DEC-002). The plan keeps the front end to the minimum in section 2.2. |
-| `fastapi`, `uvicorn`, `httpx` and `playwright` versions are not yet resolved (`openai` 3.29.0, `pydantic` 2.14.1, `pytest-asyncio` 1.4.0 and `chromadb` 1.5.9 are pinned). | The dependency milestone | Plan | Resolve and pin when first imported, after approval of DEC-011 and DEC-012. |
+| `uvicorn` and `playwright` versions are not yet resolved (`openai` 3.29.0, `pydantic` 2.14.1, `pytest-asyncio` 1.4.0, `chromadb` 1.5.9, `fastapi` 0.143.0 and `httpx` 0.28.1 are pinned). | The dependency milestone | Plan | Resolve and pin when first imported, after approval of DEC-011 and DEC-012. |
 
 ## 6. Approval
 

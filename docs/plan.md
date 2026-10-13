@@ -9,7 +9,6 @@ history is the record. Template: `docs/workflow.md`.
 
 | Milestone | Description | Model | Effort | Status |
 | --- | --- | --- | --- | --- |
-| **M7** API app and lists | App factory on loopback, `/health`, job and candidate lists, failure list | sonnet | medium | Approved |
 | **M8** API ranked views | Ranked candidates for a job, candidate detail, ranked jobs, 404 for an unknown ID | sonnet | medium | open |
 | **M9** Sample builder | `scripts/build_sample.py`: 3 diverse jobs and 10 CVs from the raw dataset, with ground truth | sonnet | medium | open |
 | **M10** Prompts and entry point | The two prompt files, `main.py`, start-to-API end-to-end test with fakes, README setup and manual live check | sonnet | high | open |
@@ -18,20 +17,6 @@ history is the record. Template: `docs/workflow.md`.
 | **M13** Candidate view UI | Raw CV, attributes and ranked job descriptions | sonnet | medium | open |
 
 ## Milestones
-
-### M7 — API app and lists
-
-- **Refs:** LST-001, LST-002, ERR-001; DEC-002, DEC-012, DEC-013, design section 4.
-- **Owner:** `src/workspace_views.py`, `src/api/app.py`, `src/api/jobs.py`, `src/api/candidates.py`, `src/api/status.py`, `src/api/schemas.py`; `requirements.txt` (`fastapi`, `httpx`).
-- **Tests first:** in `tests/e2e/test_api_lists.py` (the framework's test client, a fake workspace): `test_lst_001_jobs_endpoint_lists_job_ids_and_titles`, `test_lst_002_candidates_endpoint_lists_candidate_ids_and_names`, `test_err_001_failures_endpoint_lists_item_and_cause`, `test_dec_002_health_endpoint_reports_alive`, `test_dec_002_static_front_end_is_served_from_the_web_root`. In `tests/unit/test_workspace_views.py`: `test_lst_001_job_list_has_id_and_title`, `test_lst_002_candidate_list_has_id_and_name`, `test_err_001_failure_list_has_item_and_cause`.
-- **Build:** view functions in `workspace_views.py`; one router per domain whose handlers each call one view function; response models in `schemas.py`; `create_app(workspace, web_root)` includes the routers and mounts the static files last. No authentication and no CORS (DEC-013).
-- **Gate:** the tests and the checks pass; handlers hold no logic; no server is started in tests.
-- **Blocked:** M7 needs `fastapi` installed in the conda environment, and the install was not approved in this unattended run.
-  - `fastapi` is not installed (`import fastapi` fails; `httpx` and `uvicorn` are). `CLAUDE.md` (Git and destructive actions) says `.claude/settings.json` asks before installs; no one could answer, and the Bash tool refused `pip install fastapi`.
-  - The M7 block lists `fastapi` and `httpx` in `requirements.txt`, but no **Approval** entry permits the install.
-  - Nothing else was changed. To continue, approve one of these:
-    1. Permit `pip install fastapi` into the `ai-assisted-coding-demo-2` conda environment only, and pin the installed version in `requirements.txt` (`httpx==0.28.1` is already installed).
-    2. Install `fastapi` yourself in that environment, then set the Status to `approved`.
 
 ### M8 — API ranked views
 
