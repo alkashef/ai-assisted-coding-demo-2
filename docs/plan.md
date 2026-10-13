@@ -9,7 +9,7 @@ history is the record. Template: `docs/workflow.md`.
 
 | Milestone | Description | Model | Effort | Status |
 | --- | --- | --- | --- | --- |
-| **M11** Front-end shell and start page | `index.html`, tokens and layout, the lists and the failure notice, browser-test harness | sonnet | high | open |
+| **M11** Front-end shell and start page | `index.html`, tokens and layout, the lists and the failure notice, browser-test harness | sonnet | high | blocked |
 | **M12** Job view UI | Ranked candidate cards from the mockups | sonnet | medium | open |
 | **M13** Candidate view UI | Raw CV, attributes and ranked job descriptions | sonnet | medium | open |
 
@@ -22,6 +22,14 @@ history is the record. Template: `docs/workflow.md`.
 - **Tests first:** in `tests/unit/format.test.js`: `test_mis_001_null_renders_as_not_available`, `test_cal_004_gaps_render_as_none_or_a_count_and_months`, `test_cal_003_months_render_with_one_decimal_for_the_average`. In `tests/e2e/ui/test_start_page.py` (a fixture starts the app on loopback with a fake workspace, headless browser): `test_lst_001_ui_lists_the_job_descriptions`, `test_lst_002_ui_lists_the_candidates`, `test_err_001_ui_shows_the_failure_notice_with_the_causes`, `test_mis_001_ui_shows_not_available_for_a_missing_candidate_name`.
 - **Build:** the page from the mockups: header, navigation, main, footer; tokens only in `theme.css`; `<template>` elements for markup; plain ES modules with JSDoc; `api.js` is the only module that calls `fetch`; hash routes `#/jobs/<id>` and `#/candidates/<id>` reserved for M12 and M13. Add the browser-test fixture. If Playwright cannot drive the installed Edge or Chrome without a download, set this milestone to `blocked` with the exact question (a download needs the user's approval).
 - **Gate:** the tests and the checks pass, including `npm run typecheck`, `npm run lint`, `npm run lint:css`, `npm run format:check` and `npm test`; no inline styles and no color value outside `theme.css`; the UI tests ran headless and passed.
+- **Blocked:** The gate (`npm run lint`, `npm run lint:css`) cannot pass with BEM class names or with `src/web/js/api.js` and `log.js`, because the lint configs are written for other paths and for kebab-case names, and editing them needs the user's approval.
+  - `.stylelintrc.json` only extends `stylelint-config-standard`, whose `selector-class-pattern` requires kebab-case. It rejects `.app__header` and `.nav__link--current` (checked with `npx stylelint` on a scratch file). `.claude/rules/html-css.md` and `docs/frontend/README.md` require BEM names (`block__element--modifier`).
+  - `eslint.config.js` lifts `no-restricted-globals` (`fetch`) only for `src/api.js` and `no-console` only for `src/log.js`. The files are `src/web/js/api.js` and `src/web/js/log.js` (design section 2.2), so ESLint reports `fetch` and `console` there as errors (checked with `npx eslint --stdin --stdin-filename src/web/js/api.js`).
+  - `.claude/settings.json` asks before edits to both config files, and an edit of `.stylelintrc.json` was refused in this unattended run. A `stylelint-disable` comment, kebab-case class names or `globalThis.fetch` would work around the rules, so none was used.
+  - `playwright` is not installed in the conda environment and its use with the installed Edge or Chrome has not been checked yet. DEC-012 already approves the dependency, so no extra approval is needed for it.
+  - Nothing else was changed. To continue, approve one of these:
+    1. Edit `.stylelintrc.json` to add a `selector-class-pattern` rule that accepts BEM (`block__element--modifier`), and edit `eslint.config.js` to change the file paths `src/api.js` and `src/log.js` to `src/web/js/api.js` and `src/web/js/log.js`.
+    2. Keep the configs as they are, and allow hyphenated class names (for example `app-header`, `nav-link-current`) instead of BEM in `src/web/`, with `docs/frontend/README.md` and `.claude/rules/html-css.md` updated to match. The ESLint paths still need the edit in option 1.
 
 ### M12 — Job view UI
 
