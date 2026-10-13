@@ -9,21 +9,12 @@ history is the record. Template: `docs/workflow.md`.
 
 | Milestone | Description | Model | Effort | Status |
 | --- | --- | --- | --- | --- |
-| **M9** Sample builder | `scripts/build_sample.py`: 3 diverse jobs and 10 CVs from the raw dataset, with ground truth | sonnet | medium | open |
 | **M10** Prompts and entry point | The two prompt files, `main.py`, start-to-API end-to-end test with fakes, README setup and manual live check | sonnet | high | open |
 | **M11** Front-end shell and start page | `index.html`, tokens and layout, the lists and the failure notice, browser-test harness | sonnet | high | open |
 | **M12** Job view UI | Ranked candidate cards from the mockups | sonnet | medium | open |
 | **M13** Candidate view UI | Raw CV, attributes and ranked job descriptions | sonnet | medium | open |
 
 ## Milestones
-
-### M9 — Sample builder
-
-- **Refs:** DEC-010, spec section 1 (the sample), design section 2.2.
-- **Owner:** `scripts/build_sample.py`.
-- **Tests first:** in `tests/unit/test_build_sample.py` (temporary folders, invented raw files): `test_dec_010_copies_three_job_descriptions_and_ten_cvs`, `test_dec_010_each_job_has_at_least_three_matching_cvs`, `test_dec_010_writes_ground_truth_with_the_expected_matches`, `test_dec_010_raw_input_is_not_modified`, `test_dec_010_refuses_to_overwrite_a_non_empty_output_folder`, `test_dec_010_writes_the_dataset_attribution`.
-- **Build:** a script that takes the raw dataset folder, the output folder, the job IDs (`29243 32447 38671`) and the CV counts per job (`4 3 3`) as arguments, copies those files into `cvs/` and `job_descriptions/`, and writes `ground_truth.tsv` and an attribution text (TalentCLEF 2026, version 0.3.0, DOI 10.5281/zenodo.19652670, CC BY 4.0). It selects the first matching CVs in `qrels.tsv` order. Run it once to create `data/sample/` (ignored by Git).
-- **Gate:** the tests and the checks pass; the report gives the counts in `data/sample/` (3 job descriptions, 10 CVs) and no CV content.
 
 ### M10 — Prompts and entry point
 
