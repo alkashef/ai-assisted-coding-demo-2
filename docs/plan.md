@@ -9,20 +9,11 @@ history is the record. Template: `docs/workflow.md`.
 
 | Milestone | Description | Model | Effort | Status |
 | --- | --- | --- | --- | --- |
-| **M10** Prompts and entry point | The two prompt files, `main.py`, start-to-API end-to-end test with fakes, README setup and manual live check | sonnet | high | open |
 | **M11** Front-end shell and start page | `index.html`, tokens and layout, the lists and the failure notice, browser-test harness | sonnet | high | open |
 | **M12** Job view UI | Ranked candidate cards from the mockups | sonnet | medium | open |
 | **M13** Candidate view UI | Raw CV, attributes and ranked job descriptions | sonnet | medium | open |
 
 ## Milestones
-
-### M10 — Prompts and entry point
-
-- **Refs:** EXT-001, JOB-001, PRG-003, LST-001, LST-002, NFR-001, NFR-002; DEC-003, DEC-007, DEC-013, DEC-014, design section 2.1.
-- **Owner:** `main.py`, `prompts/extract_cv.md`, `prompts/match_cv_to_job.md`, `README.md`; `requirements.txt` (`uvicorn`).
-- **Tests first:** in `tests/e2e/test_start_to_api.py` (fake reader folders with invented CVs, fake completer, fake embedder, fake vector index, test client): `test_ext_001_start_reads_the_cv_folder_and_the_api_lists_the_candidates`, `test_job_001_start_reads_the_job_folder_and_the_api_lists_the_jobs`, `test_prg_003_repeated_reads_do_not_trigger_new_llm_calls`, `test_dec_007_the_app_is_created_from_a_finished_workspace`, `test_lst_001_and_lst_002_lists_are_complete_after_start`.
-- **Build:** the two prompt files (instruct the model to leave unknown fields `null`, use `YYYY-MM` dates, never guess, and for the recommendation to answer interview or not with a short reason); `main.py` loads config, sets up logging from settings, builds the reader, the OpenAI client, the two Chroma stores and the pipeline, runs the pipeline, then starts `uvicorn` on the configured loopback host and port. It holds no logic. README: What it does, Stack with versions, File structure, Setup (conda environment, `pip install -r requirements.txt`, `config/.env` and the OpenAI key, building the sample), How to run, How to test, and the manual live check (one run on the sample, compare the ranking with `ground_truth.tsv`, record the failure rate, the model IDs and the cost).
-- **Gate:** the tests and the checks pass; the README has every section `CLAUDE.md` requires; the milestone does not call the real OpenAI service (the live run is the user's check).
 
 ### M11 — Front-end shell and start page
 
