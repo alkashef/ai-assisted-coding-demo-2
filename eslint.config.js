@@ -43,7 +43,7 @@ export default [
       ],
     },
   },
-  { files: ["src/api.js"], rules: { "no-restricted-globals": "off" } },
-  { files: ["src/log.js"], rules: { "no-console": "off" } },
+  { files: ["src/web/js/api.js"], rules: { "no-restricted-globals": "off" } },
+  { files: ["src/web/js/log.js"], rules: { "no-console": "off" } },
   { files: ["tests/**/*.js"], languageOptions: { globals: { ...globals.node } } },
 ];

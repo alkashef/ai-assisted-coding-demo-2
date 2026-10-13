@@ -105,14 +105,16 @@ Text and badge colors have a contrast of at least 4.5:1 on their backgrounds. Th
 
 ## Components to implement
 
-The class names are BEM and name the purpose. `mockup.css` shows the styles. Map them to the sheets in
-`docs/design.md` section 2.2:
+Class names are lowercase words joined by single hyphens, such as `app-header` or `nav-link-current`, and they
+name the purpose (`.claude/rules/html-css.md`). The start of an element or modifier name is its block's name
+(`card-score-label` belongs to `card`). The mockups use the same names, so the classes in `mockup.css` can be
+reused as they are. `mockup.css` shows the styles. Map them to the sheets in `docs/design.md` section 2.2:
 
 | Sheet | Holds |
 | --- | --- |
 | `theme.css` | The tokens above |
 | `base.css` | Body, links, focus outline, `.not-available`, `.chips`, `.badge` |
-| `layout.css` | `.app`, `.app__header`, `.app__body`, `.app__nav`, `.app__main`, `.app__footer`, `.nav`, `.nav-fold`, `.page-head` |
+| `layout.css` | `.app`, `.app-header`, `.app-body`, `.app-nav`, `.app-main`, `.app-footer`, `.nav`, `.nav-fold`, `.page-head` |
 | `detail.css` | `.card`, `.cards`, `.stat`, `.facts`, `.panel`, `.notice`, `.doc`, `.ranking`, `.detail` |
 
 Markup that JavaScript builds lives in `<template>` elements in `index.html`: one for a nav item, a ranked
