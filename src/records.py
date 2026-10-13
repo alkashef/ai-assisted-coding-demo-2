@@ -62,6 +62,14 @@ class CvFacts:
 
 
 @dataclass(frozen=True)
+class Recommendation:
+    """The LLM's advice on whether to interview a candidate for a job (REC-001)."""
+
+    interview: bool
+    reason: str
+
+
+@dataclass(frozen=True)
 class CalculatedAttributes:
     """The attributes that code calculates from the facts (CAL-001 to CAL-005, CAL-007).
 

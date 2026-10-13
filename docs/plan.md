@@ -9,7 +9,6 @@ history is the record. Template: `docs/workflow.md`.
 
 | Milestone | Description | Model | Effort | Status |
 | --- | --- | --- | --- | --- |
-| **M3** LLM contract and request text | Ports, reply schemas, extraction and recommendation request and reply handling | sonnet | high | open |
 | **M4** OpenAI client | The only module that calls OpenAI: structured replies and embeddings, errors wrapped as `LlmError` | sonnet | high | open |
 | **M5** Vector store and ranking | Chroma collection, cosine nearest, items without a vector ranked last | sonnet | high | open |
 | **M6** Start-up pipeline | Embed, extract, calculate, rank both ways and recommend; a failed call is recorded and the rest continue | opus | high | open |
@@ -22,14 +21,6 @@ history is the record. Template: `docs/workflow.md`.
 | **M13** Candidate view UI | Raw CV, attributes and ranked job descriptions | sonnet | medium | open |
 
 ## Milestones
-
-### M3 — LLM contract and request text
-
-- **Refs:** EXT-002, EXT-003, EXT-004, EXT-006, EXT-009, EXT-010, MIS-001, REC-001; DEC-005, DEC-006, DEC-011, design sections 3 and 4.
-- **Owner:** `src/ports.py`, `src/llm_schemas.py`, `src/extraction.py`, `src/recommendation.py`; `requirements.txt` (`pydantic`).
-- **Tests first:** in `tests/unit/test_extraction.py`: `test_ext_002_reply_name_becomes_facts_name`, `test_ext_003_reply_current_title_becomes_facts_current_title`, `test_ext_004_reply_skills_become_facts_skills`, `test_ext_006_reply_city_and_country_become_facts_address`, `test_ext_009_reply_jobs_keep_employer_location_title_dates_and_description`, `test_ext_010_reply_highest_degree_becomes_facts_highest_degree`, `test_mis_001_null_reply_field_becomes_none`, `test_ext_002_request_contains_the_cv_text`, `test_ext_002_bad_date_raises_llm_output_error_with_the_raw_output`. In `tests/unit/test_recommendation.py`: `test_rec_001_reply_becomes_a_recommendation_with_verdict_and_reason`, `test_rec_001_request_contains_the_job_text_and_the_candidate_facts`, `test_dec_006_request_excludes_name_address_and_contact_details`.
-- **Build:** `ports.py` with the `StructuredCompleter`, `Embedder` and `VectorIndex` protocols and `LlmError` and `LlmOutputError` (carries the raw output); `llm_schemas.py` with the `pydantic` reply models; `extraction.py` and `recommendation.py` build the request text from a prompt template (placeholders `{{CV_TEXT}}`, `{{JOB_TEXT}}`, `{{CANDIDATE_FACTS}}`) and turn a validated reply into the records. Pure and synchronous. Install `pydantic` into the conda environment and pin it in `requirements.txt`.
-- **Gate:** the tests and the checks pass; no test calls an LLM; `pydantic` is pinned and used by an import.
 
 ### M4 — OpenAI client
 
