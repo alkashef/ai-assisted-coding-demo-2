@@ -18,7 +18,7 @@ click-through prototype. The same files are on the design canvas: https://claude
 | File | Screen | Requirements |
 | --- | --- | --- |
 | `Main.dc.html` | Start page: both lists, an empty selection, and the failure notice | LST-001, LST-002, ERR-001, ERR-002 |
-| `Job-view.dc.html` | A job description is selected: all candidates ranked, best first | JOB-002, RNK-001 to RNK-003, REC-001, MIS-001, MIS-002 |
+| `Job-view.dc.html` | A job description is selected: its text (JOB-003, DEC-020, not in the mockup), then all candidates ranked, best first | JOB-002, JOB-003, RNK-001 to RNK-003, REC-001, MIS-001, MIS-002 |
 | `Candidate-view.dc.html` | A candidate is selected: raw CV, attributes, job descriptions ranked | CND-001 to CND-003, EXT-002 to EXT-010, CAL-001 to CAL-005, CAL-007 |
 | `States.dc.html` | Failure notice, empty selection, missing values, navigation states, badges, unknown item | ERR-001, ERR-002, MIS-001, MIS-002 |
 | `Mobile-job-view.dc.html` | The job view at phone width (390 px) | ui-design rule: responsive |
@@ -27,9 +27,12 @@ click-through prototype. The same files are on the design canvas: https://claude
 
 The standard layout from `.claude/rules/ui-design.md`: header, navigation, main content, footer.
 
-- **Header:** the app name and a one-line tagline. No other controls.
-- **Navigation (left):** two lists, "Job descriptions" and "Candidates". Each item shows its name and its file-name ID. The
-  current item is highlighted and has `aria-current="page"`.
+- **Header:** the app name and a one-line tagline. No other controls. It is frozen: it stays at the top of the window
+  while the page scrolls (DEC-019). Nothing else is frozen.
+- **Navigation (left):** two lists, "Job descriptions" and "Candidates". Each item shows its name, with its file-name ID
+  below it in small grey text (DEC-019). The current item is highlighted and has `aria-current="page"`.
+- **File names:** wherever an ID is shown, it is a second line under the name or title, in the small size and
+  `--color-muted` (DEC-019): navigation items, candidate cards, and the headings of the candidate and job views.
 - **Main:** one selection at a time. The failure notice, when there is one, sits at the top of main.
 - **Footer:** the dataset attribution (TalentCLEF 2026, CC BY 4.0).
 - **Responsive:** the navigation and main wrap onto separate rows on narrow screens. At phone width the navigation
@@ -41,7 +44,7 @@ The standard layout from `.claude/rules/ui-design.md`: header, navigation, main 
   (`#/jobs/<id>` and `#/candidates/<id>`), so the browser back button and a bookmark work. This is a front-end
   recommendation, not a spec requirement.
 - Data comes only from the JSON API in `docs/design.md` section 4, through `api.js`. Every view needs one
-  request: `/api/jobs/{id}/ranked-candidates` for the job view, and `/api/candidates/{id}` plus
+  request: `/api/jobs/{id}` plus `/api/jobs/{id}/ranked-candidates` for the job view, and `/api/candidates/{id}` plus
   `/api/candidates/{id}/ranked-jobs` for the candidate view. The lists and the failure notice load at start.
 - Everything is computed before the server starts (DEC-007), so reads are instant and the UI has no loading
   state. PRG-001 and PRG-002 are withdrawn.
@@ -65,8 +68,8 @@ The standard layout from `.claude/rules/ui-design.md`: header, navigation, main 
 
 Each ranked candidate card shows, in this order:
 
-1. Rank, name (a link to the candidate view), CV ID, current job title (EXT-003) and current city and country
-   (EXT-006).
+1. Rank, name (a link to the candidate view), the CV ID below the name in small grey text (DEC-019), then current job
+   title (EXT-003) and current city and country (EXT-006).
 2. Similarity score and the recommendation badge: "Interview" or "Do not interview" (REC-001), with the reason
    text beneath.
 3. Six key values: total employment in months (CAL-001), jobs held (CAL-002), average per job in months
