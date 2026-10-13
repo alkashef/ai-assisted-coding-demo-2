@@ -9,7 +9,6 @@ history is the record. Template: `docs/workflow.md`.
 
 | Milestone | Description | Model | Effort | Status |
 | --- | --- | --- | --- | --- |
-| **M8** API ranked views | Ranked candidates for a job, candidate detail, ranked jobs, 404 for an unknown ID | sonnet | medium | open |
 | **M9** Sample builder | `scripts/build_sample.py`: 3 diverse jobs and 10 CVs from the raw dataset, with ground truth | sonnet | medium | open |
 | **M10** Prompts and entry point | The two prompt files, `main.py`, start-to-API end-to-end test with fakes, README setup and manual live check | sonnet | high | open |
 | **M11** Front-end shell and start page | `index.html`, tokens and layout, the lists and the failure notice, browser-test harness | sonnet | high | open |
@@ -17,14 +16,6 @@ history is the record. Template: `docs/workflow.md`.
 | **M13** Candidate view UI | Raw CV, attributes and ranked job descriptions | sonnet | medium | open |
 
 ## Milestones
-
-### M8 — API ranked views
-
-- **Refs:** JOB-002, CND-001, CND-002, CND-003, RNK-003, REC-001, MIS-001; DEC-002, design section 4.
-- **Owner:** `src/workspace_views.py`, `src/api/jobs.py`, `src/api/candidates.py`, `src/api/schemas.py`.
-- **Tests first:** in `tests/e2e/test_api_ranked_views.py`: `test_job_002_ranked_candidates_lists_all_candidates_best_first`, `test_rnk_003_ranked_candidate_has_extracted_and_calculated_attributes`, `test_rec_001_ranked_candidate_has_a_recommendation`, `test_mis_001_missing_value_is_null_in_the_json`, `test_cnd_001_candidate_detail_has_the_raw_cv_text`, `test_cnd_002_candidate_detail_has_extracted_and_calculated_attributes`, `test_cnd_003_ranked_jobs_lists_all_job_descriptions_best_first`, `test_job_002_unknown_job_returns_404_with_a_detail`, `test_cnd_001_unknown_candidate_returns_404_with_a_detail`.
-- **Build:** the three endpoints `/api/jobs/{job_id}/ranked-candidates`, `/api/candidates/{candidate_id}` and `/api/candidates/{candidate_id}/ranked-jobs`, each calling one view function; a score or value that is `None` is `null` in the JSON.
-- **Gate:** the tests and the checks pass; the JSON shapes match design section 4.
 
 ### M9 — Sample builder
 

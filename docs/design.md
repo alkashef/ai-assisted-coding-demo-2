@@ -56,7 +56,7 @@ Import rules. A module imports only from rows above it, or from itself:
 
 - Domain modules import only `records` (and the standard library, plus `pydantic` for the schemas).
 - `pipeline` imports domain modules, `llm_schemas` and `ports`. It receives the file reader, the LLM client and the two vector stores as arguments.
-- `workspace_views` imports `records` only. The pipeline has already ranked both ways.
+- `workspace_views` imports `records` and the pure functions of `attributes` (last job, distinct countries and employers). The pipeline has already ranked both ways.
 - `src/api/*` imports `workspace_views`, `records` and the schemas. A handler never imports a gateway, the pipeline or the domain directly.
 - Gateways import `records`, `llm_schemas` and `ports` only.
 - Only `main.py` imports `config`, and it passes values down as typed settings objects.
