@@ -1,0 +1,31 @@
+# Runs the project checks (scripts/check.py) on every push to main and every pull request (DEC-018).
+# It needs no secrets: the tests use fakes. Each action is pinned to an exact release.
+name: Checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-python@v7.0.0
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: "22"
+      - name: Install the Python dependencies
+        run: pip install -r requirements.txt -c constraints.txt
+      - name: Check that the installed packages are consistent
+        run: pip check
+      - name: Install the JavaScript tools
+        run: npm ci
+      - name: Run the checks
+        run: python scripts/check.py

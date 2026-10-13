@@ -9,7 +9,6 @@ history is the record. Template: `docs/workflow.md`.
 
 | Milestone | Description | Model | Effort | Status |
 | --- | --- | --- | --- | --- |
-| **M14** Lock file and CI | `constraints.txt`, `scripts/lock.py`, a lock check in `check.py`, and the GitHub Actions workflow (DEC-018) | sonnet | high | blocked |
 | **M15** Stale-response guard | The page ignores a late response unless both the kind and the ID still match the address (design section 3) | sonnet | medium | open |
 | **M16** End states and impossible dates | `Job.is_current`, the extraction reply, and the "Not available" rules in `attributes.py` (CAL-007, CAL-009, CAL-010, DEC-015) | sonnet | high | open |
 | **M17** Show the unknown end | `is_current` in the API's last job, the recommendation facts, and the page ("Present" or "Not available") (DEC-015) | sonnet | medium | open |
@@ -20,23 +19,6 @@ history is the record. Template: `docs/workflow.md`.
 | **M22** Gold file draft | Drafts `data/sample/gold_jobs.json` from the 10 sample CVs, with a `.gitignore` exception (NFR-005, DEC-017) | sonnet | high | open |
 
 ## Milestones
-
-### M14 — Lock file and CI
-
-- **Refs:** DEC-018, `CLAUDE.md` (Dependencies, as amended on 2026-10-14).
-- **Owner:** `scripts/lock.py`, `scripts/check.py`, `.github/workflows/check.yml`, `constraints.txt`.
-- **Tests first:** `test_dec_018_lock_script_writes_pins_from_freeze` (the freeze command is injected, so the test uses a fake), `test_dec_018_lock_check_passes_when_every_pin_is_present`, `test_dec_018_lock_check_fails_when_a_pin_is_missing`, `test_dec_018_lock_check_fails_when_a_version_differs`. Test files: `tests/unit/test_lock.py` and `tests/unit/test_check.py`.
-- **Build:** add `scripts/lock.py`, a thin wrapper around `pip freeze` that writes `constraints.txt` (editable installs excluded). Add the lock check to `scripts/check.py` (the edit is approved by DEC-018): every `name==version` line in `requirements.txt` appears in `constraints.txt` with the same version. Run `python scripts/lock.py` in the conda environment and commit `constraints.txt`. Add `.github/workflows/check.yml`: runs on push to `main` and on pull requests, on `windows-latest`; sets up Python 3.12 and Node; `pip install -r requirements.txt -c constraints.txt`; `pip check`; `npm ci`; `python scripts/check.py`. No secrets. Resolve each action's current release from its GitHub release page and pin that exact version. If a version cannot be verified, set the milestone to `blocked` and ask. Update the README (Setup installs with `-c constraints.txt`; a line on `scripts/lock.py`; the file structure table) and make sure `.gitignore` does not ignore `constraints.txt`.
-- **Gate:** the tests and the checks in `CLAUDE.md` pass; the workflow file is valid YAML and every action version is pinned; `python scripts/lock.py` followed by the lock check passes. The first CI run on GitHub is unverified: say so in the report (open question: do the tests run without `config/.env`?).
-- **Blocked:** The milestone must edit `scripts/check.py`, and an edit to that file needs the user's confirmation, which an unattended run cannot get.
-  - `.claude/settings.json` lists `Edit(/scripts/check.py)` under `ask`. The edit was refused when asked (Build: "add the lock check to `scripts/check.py`").
-  - `CLAUDE.md` (Git and destructive actions): never work around a block with a different command. So no other tool was used to write the file.
-  - DEC-018 and the Build line say the edit is approved, but no **Approval** entry in this block permits it.
-  - Verified before the stop: `actions/checkout` v7.0.1, `actions/setup-python` v7.0.0 and `actions/setup-node` v7.1.0 are the latest releases (GitHub release pages, 2026-10-14).
-  - Nothing else was changed. The files started for this milestone (`scripts/lock.py`, `tests/unit/test_lock.py`, `tests/unit/test_check.py`) were removed.
-  - To continue, approve one of these:
-    1. Edit `scripts/check.py` to add only the lock check (`pins`, `lock_problems`, `lock_failures`, called from `check_all`), and nothing else in that file; or add `Edit(/scripts/check.py)` to `permissions.allow` for the run.
-    2. Put the lock check in a new file, `scripts/lock_check.py`, and have the milestone run it from the workflow and the pre-commit hook only if the user also approves editing `scripts/run-check.sh`. (This changes DEC-018, which names `check.py`.)
 
 ### M15 — Stale-response guard
 

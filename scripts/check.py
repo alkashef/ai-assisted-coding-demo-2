@@ -116,9 +116,52 @@ def label(command: list[str]) -> str:
     return " ".join(words)
 
 
+def pins(text: str) -> dict[str, str]:
+    """Return the `name==version` pins in a requirements text, by normalised name (DEC-018)."""
+    found: dict[str, str] = {}
+    for raw in text.splitlines():
+        name, separator, version = raw.split("#")[0].strip().partition("==")
+        if separator:
+            base = name.split("[")[0].strip().lower().replace("_", "-").replace(".", "-")
+            found[base] = version.split(";")[0].strip()
+    return found
+
+
+def lock_problems(requirements: str, constraints: str) -> list[str]:
+    """Return one line for each pin of `requirements` that `constraints` lacks or has changed."""
+    locked = pins(constraints)
+    problems: list[str] = []
+    for name, version in pins(requirements).items():
+        if name not in locked:
+            problems.append(f"`{name}` is pinned in requirements.txt but missing from the lock.")
+        elif locked[name] != version:
+            problems.append(
+                f"`{name}=={version}` in requirements.txt, but the lock has {locked[name]}."
+            )
+    return problems
+
+
+def lock_failures() -> list[str]:
+    """Return the failure text when `constraints.txt` does not cover `requirements.txt`."""
+    requirements = ROOT / "requirements.txt"
+    constraints = ROOT / "constraints.txt"
+    if not requirements.is_file():
+        return []
+    if not constraints.is_file():
+        return ["`constraints.txt` is missing. Run `python scripts/lock.py`."]
+    problems = lock_problems(
+        requirements.read_text(encoding="utf-8"), constraints.read_text(encoding="utf-8")
+    )
+    if not problems:
+        return []
+    return [
+        "`constraints.txt` is out of date. Run `python scripts/lock.py`:\n" + "\n".join(problems)
+    ]
+
+
 def check_all() -> int:
     """Run every check that applies and print each failure. Return 0 or FAILED."""
-    failures: list[str] = []
+    failures: list[str] = lock_failures()
     for command in python_checks() + web_checks():
         problem = why_not_runnable(command)
         if not problem:

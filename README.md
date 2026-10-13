@@ -24,7 +24,9 @@ Requirements are in `docs/spec.md`, decisions in `docs/design.md`.
 | `tests/` | `unit/` tests (Python, and `format.test.js` for the front end), `e2e/` API tests and `e2e/ui/` headless-browser tests. |
 | `docs/` | Workflow, spec, design, plan, and the UI mockups in `docs/frontend/`. |
 | `config/` | `.env` (never committed) and `.env.example`. |
-| `scripts/` | `check.py` (the checks), `build_sample.py`, `milestones-runner.py`, `cleanup.py`. |
+| `scripts/` | `check.py` (the checks), `lock.py` (regenerates `constraints.txt`), `build_sample.py`, `milestones-runner.py`, `cleanup.py`. |
+| `.github/workflows/` | `check.yml`: GitHub Actions runs `scripts/check.py` on every push to `main` and every pull request. |
+| `constraints.txt` | The generated full pin list of every installed package (root file, beside `requirements.txt`). |
 | `.claude/` | Claude Code settings, including the hook that checks each edit. |
 | `.githooks/` | `pre-commit`: refuses a commit unless the checks pass. |
 | `.vscode/` | Shared editor settings. |
@@ -39,8 +41,10 @@ Requirements are in `docs/spec.md`, decisions in `docs/design.md`.
    ```bash
    conda create -n ai-assisted-coding-demo-2 python=3.12
    conda activate ai-assisted-coding-demo-2
-   pip install -r requirements.txt
+   pip install -r requirements.txt -c constraints.txt
    ```
+
+   `requirements.txt` lists the direct dependencies. `constraints.txt` pins every installed package, so every install gets the same versions. After you change `requirements.txt`, run `python scripts/lock.py` in the environment to regenerate it. Never edit it by hand. `python scripts/check.py` fails when it lacks a pin of `requirements.txt`.
 
 2. Copy `config/.env.example` to `config/.env` and fill in the values. Every key is listed there. Set `OPENAI_API_KEY` to your OpenAI API key. Keep it only in `config/.env`, which Git ignores. A real environment variable overrides the file. The app stops at start-up with the name of any key that is missing or invalid.
 
@@ -74,7 +78,7 @@ The app first runs the start-up pipeline: it logs its progress and calls OpenAI 
 python -m pytest --cov=src --cov-branch --cov-fail-under=80
 ```
 
-`python scripts/check.py` runs every check (ruff, mypy, pytest, and the web checks). No automated test calls the real OpenAI service.
+`python scripts/check.py` runs every check (the lock check, ruff, mypy, pytest, and the web checks). No automated test calls the real OpenAI service. GitHub Actions runs the same script on every push to `main` and every pull request, so a commit made with `--no-verify` is still caught.
 
 The pytest run includes the headless-browser tests in `tests/e2e/ui/`. They start the app on `127.0.0.1` with a fake workspace and drive the installed Edge or Chrome, so one of them must be installed. To run only them: `python -m pytest tests/e2e/ui --no-cov`. The front-end checks are `npm run typecheck`, `npm run lint`, `npm run lint:css`, `npm run format:check` and `npm test` (after `npm install`).
 
