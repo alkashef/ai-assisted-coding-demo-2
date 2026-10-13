@@ -13,14 +13,15 @@ Requirements are in `docs/spec.md`, decisions in `docs/design.md`.
 - OpenAI SDK `openai` 3.29.0: extraction, recommendations and embeddings
 - `chromadb` 1.5.9: in-memory vector store; `pydantic` 2.14.1: reply schemas; `python-dotenv` 1.2.4: settings
 - pytest 9.1.1, pytest-cov 7.1.0, pytest-asyncio 1.4.0, httpx 0.28.1, ruff 0.17.0, mypy 2.4.0
+- Playwright 1.63.0 (Python): headless-browser tests that drive the installed Edge or Chrome (no browser download)
 
 ## File structure
 
 | Path | Holds |
 | --- | --- |
 | `main.py` | The entry point: loads settings, runs the start-up pipeline, starts the server. |
-| `src/` | All source code. `src/api/` is the HTTP layer, `src/web/` the front end. |
-| `tests/` | `unit/` and `e2e/` tests. |
+| `src/` | All source code. `src/api/` is the HTTP layer, `src/web/` the front end (`index.html`, `css/`, `js/`). |
+| `tests/` | `unit/` tests (Python, and `format.test.js` for the front end), `e2e/` API tests and `e2e/ui/` headless-browser tests. |
 | `docs/` | Workflow, spec, design, plan, and the UI mockups in `docs/frontend/`. |
 | `config/` | `.env` (never committed) and `.env.example`. |
 | `scripts/` | `check.py` (the checks), `build_sample.py`, `milestones-runner.py`, `cleanup.py`. |
@@ -74,6 +75,8 @@ python -m pytest --cov=src --cov-branch --cov-fail-under=80
 ```
 
 `python scripts/check.py` runs every check (ruff, mypy, pytest, and the web checks). No automated test calls the real OpenAI service.
+
+The pytest run includes the headless-browser tests in `tests/e2e/ui/`. They start the app on `127.0.0.1` with a fake workspace and drive the installed Edge or Chrome, so one of them must be installed. To run only them: `python -m pytest tests/e2e/ui --no-cov`. The front-end checks are `npm run typecheck`, `npm run lint`, `npm run lint:css`, `npm run format:check` and `npm test` (after `npm install`).
 
 ### Manual live check
 

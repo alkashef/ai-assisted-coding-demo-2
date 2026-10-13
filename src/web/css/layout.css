@@ -1,0 +1,152 @@
+/* layout.css: the app shell (header, navigation, main, footer) and the navigation lists.
+   Styles: where the parts of the page sit and how the navigation folds at phone width. Does not
+   style panels, notices or cards (detail.css). */
+
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font: var(--size-body) / 1.5 var(--font-body);
+}
+
+.app-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-1) var(--space-3);
+  padding: var(--space-3) var(--space-5);
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.app-title {
+  margin: 0;
+  font-size: var(--size-heading);
+  font-weight: 700;
+}
+
+.app-tagline {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: var(--size-small);
+}
+
+.app-body {
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  align-items: flex-start;
+  gap: var(--space-5);
+  padding: var(--space-5);
+}
+
+.app-nav {
+  flex: 1 1 260px;
+  max-width: 320px;
+}
+
+.app-main {
+  flex: 999 1 560px;
+  min-width: 0;
+}
+
+.app-footer {
+  padding: var(--space-3) var(--space-5);
+  background: var(--color-surface);
+  border-top: 1px solid var(--color-border);
+  color: var(--color-muted);
+  font-size: var(--size-small);
+}
+
+.nav-group {
+  margin: 0 0 var(--space-5);
+}
+
+.nav-heading {
+  margin: 0 0 var(--space-2);
+  color: var(--color-muted);
+  font-size: var(--size-small);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.nav-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.nav-link {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius);
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.nav-link:hover {
+  background: var(--color-hover);
+}
+
+.nav-link-current {
+  background: var(--color-accent-bg);
+  color: var(--color-accent);
+  font-weight: 600;
+}
+
+.nav-id {
+  color: var(--color-muted);
+  font-size: var(--size-small);
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+  text-align: right;
+}
+
+.nav-link-current .nav-id {
+  color: var(--color-accent);
+}
+
+.nav-fold-summary {
+  display: none;
+}
+
+@media (width <= 600px) {
+  .app-header,
+  .app-body {
+    padding: var(--space-4);
+  }
+
+  .app-body {
+    gap: var(--space-4);
+  }
+
+  .app-nav {
+    max-width: none;
+  }
+
+  .nav-fold {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+  }
+
+  .nav-fold-summary {
+    display: list-item;
+    padding: var(--space-3) var(--space-4);
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .nav-fold-body {
+    padding: 0 var(--space-3) var(--space-3);
+  }
+}

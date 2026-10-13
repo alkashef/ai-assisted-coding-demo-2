@@ -1,0 +1,34 @@
+/* theme.css: the design tokens (colors, spacing, radius, measure, fonts and sizes).
+   Styles: nothing by itself. Does not style any element: base.css, layout.css and detail.css use
+   these tokens. No other file may contain a color value. */
+
+:root {
+  --color-bg: #f6f7f9;
+  --color-surface: #fff;
+  --color-hover: #eceff3;
+  --color-text: #1d2430;
+  --color-muted: #566170;
+  --color-border: #d5dae1;
+  --color-accent: #1f5fae;
+  --color-accent-bg: #e8f0fb;
+  --color-positive: #17633a;
+  --color-positive-bg: #e3f4ea;
+  --color-negative: #8f2222;
+  --color-negative-bg: #fbe9e9;
+  --color-notice: #7a4e00;
+  --color-notice-bg: #fff3d1;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --radius: 6px;
+  --measure: 72ch;
+  --font-body: system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: ui-monospace, "Cascadia Mono", consolas, monospace;
+  --size-small: 13px;
+  --size-body: 15px;
+  --size-heading: 17px;
+  --size-title: 22px;
+}

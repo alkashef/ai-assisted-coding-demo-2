@@ -1,0 +1,51 @@
+/* detail.css: the panels and the failure notice in the main area.
+   Styles: the selection panels, the crash panel and the failure notice. Does not style the page
+   layout or the navigation (layout.css). Later views add their cards and lists here. */
+
+.panel {
+  margin: 0 0 var(--space-4);
+  padding: var(--space-5);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+}
+
+.panel-title {
+  margin: 0 0 var(--space-2);
+  font-size: var(--size-heading);
+}
+
+.panel-text {
+  margin: 0;
+  max-width: var(--measure);
+  color: var(--color-muted);
+}
+
+.panel-error {
+  border-color: var(--color-negative);
+}
+
+.panel-error-text {
+  margin: 0;
+  font: var(--size-small) / 1.6 var(--font-mono);
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.notice {
+  margin: 0 0 var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-notice-bg);
+  color: var(--color-notice);
+  border-radius: var(--radius);
+}
+
+.notice-summary {
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.notice-list {
+  margin: var(--space-2) 0 0;
+  padding-left: var(--space-5);
+}

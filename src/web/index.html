@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CV Matcher</title>
+    <link rel="stylesheet" href="css/theme.css" />
+    <link rel="stylesheet" href="css/base.css" />
+    <link rel="stylesheet" href="css/layout.css" />
+    <link rel="stylesheet" href="css/detail.css" />
+    <script type="module" src="js/main.js"></script>
+  </head>
+  <body>
+    <div class="app">
+      <header class="app-header">
+        <h1 class="app-title">CV Matcher</h1>
+        <p class="app-tagline">Rank CVs against job descriptions</p>
+      </header>
+      <div class="app-body">
+        <nav class="app-nav" aria-label="Job descriptions and candidates" data-nav>
+          <details class="nav-fold" open data-nav-fold>
+            <summary class="nav-fold-summary">Job descriptions and candidates</summary>
+            <div class="nav-fold-body">
+              <section class="nav-group" data-group="jobs">
+                <h2 class="nav-heading">
+                  Job descriptions <span class="nav-count" data-count></span>
+                </h2>
+                <ul class="nav-list" data-list="jobs"></ul>
+              </section>
+              <section class="nav-group" data-group="candidates">
+                <h2 class="nav-heading">Candidates <span class="nav-count" data-count></span></h2>
+                <ul class="nav-list" data-list="candidates"></ul>
+              </section>
+            </div>
+          </details>
+        </nav>
+        <main class="app-main">
+          <div data-notices></div>
+          <section class="panel panel-error" role="alert" data-crash hidden>
+            <h2 class="panel-title">Something went wrong</h2>
+            <pre class="panel-error-text" data-crash-text></pre>
+          </section>
+          <section class="panel">
+            <h2 class="panel-title">Select an item to start</h2>
+            <p class="panel-text">
+              Select a job description to see all candidates ranked by how well they match it.
+              Select a candidate to see the CV, the extracted and calculated attributes, and the job
+              descriptions ranked for that candidate.
+            </p>
+          </section>
+        </main>
+      </div>
+      <footer class="app-footer">
+        Sample data: TalentCLEF 2026 (synthetic records, CC BY 4.0).
+      </footer>
+    </div>
+
+    <template id="nav-item-template">
+      <li>
+        <a class="nav-link" href="#"><span class="nav-label"></span><span class="nav-id"></span></a>
+      </li>
+    </template>
+
+    <template id="failure-notice-template">
+      <details class="notice" role="status" open>
+        <summary class="notice-summary"></summary>
+        <ul class="notice-list"></ul>
+      </details>
+    </template>
+  </body>
+</html>
