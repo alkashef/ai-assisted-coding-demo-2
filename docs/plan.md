@@ -9,7 +9,6 @@ history is the record. Template: `docs/workflow.md`.
 
 | Milestone | Description | Model | Effort | Status |
 | --- | --- | --- | --- | --- |
-| **M6** Start-up pipeline | Embed, extract, calculate, rank both ways and recommend; a failed call is recorded and the rest continue | opus | high | open |
 | **M7** API app and lists | App factory on loopback, `/health`, job and candidate lists, failure list | sonnet | medium | open |
 | **M8** API ranked views | Ranked candidates for a job, candidate detail, ranked jobs, 404 for an unknown ID | sonnet | medium | open |
 | **M9** Sample builder | `scripts/build_sample.py`: 3 diverse jobs and 10 CVs from the raw dataset, with ground truth | sonnet | medium | open |
@@ -19,14 +18,6 @@ history is the record. Template: `docs/workflow.md`.
 | **M13** Candidate view UI | Raw CV, attributes and ranked job descriptions | sonnet | medium | open |
 
 ## Milestones
-
-### M6 — Start-up pipeline
-
-- **Refs:** EXT-001, JOB-001, PRG-003, MIS-002, ERR-001, ERR-002, RNK-002, REC-001; DEC-005, DEC-007, DEC-008, design sections 2.1 and 3.
-- **Owner:** `src/pipeline.py`; `src/records.py` (`Workspace`, `Recommendation`).
-- **Tests first:** in `tests/unit/test_pipeline.py` (async, with fakes): `test_ext_001_every_cv_from_the_reader_is_in_the_workspace`, `test_job_001_every_job_description_from_the_reader_is_in_the_workspace`, `test_prg_003_each_cv_is_extracted_once`, `test_prg_003_each_document_is_embedded_once`, `test_prg_003_attributes_are_calculated_once_per_cv`, `test_rec_001_one_recommendation_per_job_and_cv_pair`, `test_rnk_002_rank_does_not_change_when_attributes_change`, `test_err_002_failed_extraction_keeps_the_other_results`, `test_err_001_failure_list_names_the_item_and_the_cause`, `test_err_002_failed_recommendation_leaves_that_pair_without_a_recommendation`, `test_mis_002_cv_with_a_failed_embedding_stays_in_every_ranking_last`, `test_dec_008_an_error_that_is_not_an_llm_error_is_not_caught`, `test_dec_007_calls_stay_within_the_concurrency_limit`.
-- **Build:** `Pipeline.build(today)` runs the steps in DEC-007 with an async semaphore: read documents, embed into the two stores, extract, calculate, rank both ways with `ranking`, recommend per pair; returns one `Workspace`. It catches only `LlmError`, per item, in one place, records it in the failure list and continues (DEC-008). It logs progress at INFO.
-- **Gate:** the tests and the checks pass; the only `except` for DEC-008 is in `pipeline.py` and names `LlmError`; no real LLM call.
 
 ### M7 — API app and lists
 

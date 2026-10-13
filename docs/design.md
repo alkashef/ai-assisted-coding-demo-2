@@ -145,7 +145,8 @@ All data is in memory for one run (DEC-009). IDs are file names. Records are fro
 | `CvFacts` | `name`, `current_title`, `skills`, `city`, `country`, `highest_degree`, `jobs`, `education`. Every field except the lists may be `None`. |
 | `CalculatedAttributes` | `total_months`, `job_count`, `average_job_months`, `gaps` (a list of month counts), `months_since_graduation`, `currently_employed`. Each may be `None` (MIS-001). |
 | `Recommendation` | `interview` (true or false), `reason` (text). |
-| `Workspace` | Documents, facts and attributes per ID. For each job description, the ranked candidates with scores. For each candidate, the ranked job descriptions with scores. A recommendation per job and CV pair. The failure list (item ID and cause). A score is `None` for an item with no vector. |
+| `Failure` | `item_id` (a file name, or `<job ID> + <CV ID>` for a recommendation), `cause` (the step and the `LlmError` message). |
+| `Workspace` | `cvs`, `jobs` (documents), `facts` and `attributes` per CV ID (absent when extraction failed), `ranked_candidates` per job ID, `ranked_jobs` per CV ID (each a list of (ID, score), best first), `recommendations` per (job ID, CV ID) pair, `failures` (the failure list). A score is `None` for an item with no vector. |
 
 Rules for the calculations (CAL-008, EX-001, EX-002):
 
@@ -162,6 +163,7 @@ LLM output contract (a `pydantic` model in `src/llm_schemas.py`, validated by th
 - Extraction reply: the `CvFacts` fields, dates as `YYYY-MM` or `null`.
 - Recommendation reply: `interview` (true or false) and `reason` (text).
 - A refusal or any other shape raises `LlmOutputError` with the raw output. There is no repair and no retry.
+- The prompt file, filled in, is the user text. The system text is empty: the prompt file holds every instruction.
 
 ## 4. Interfaces
 

@@ -5,6 +5,7 @@ anything (`attributes.py` does). Implements the data model in design section 3 (
 A value that is missing is `None` (MIS-001).
 """
 
+from collections.abc import Mapping
 from dataclasses import dataclass
 
 
@@ -82,3 +83,40 @@ class CalculatedAttributes:
     gaps: tuple[int, ...] | None
     months_since_graduation: int | None
     currently_employed: bool | None
+
+
+@dataclass(frozen=True)
+class Failure:
+    """One failed LLM call: the item it was for and why it failed (ERR-001, DEC-008)."""
+
+    item_id: str
+    cause: str
+
+
+@dataclass(frozen=True)
+class Workspace:
+    """Everything the start-up pipeline computed, kept in memory for the run (DEC-007).
+
+    A CV whose extraction failed has no facts, no attributes and no recommendations (ERR-002).
+    A ranking lists every item as (ID, score), best first; the score is `None` for an item
+    without a vector, which is listed last (MIS-002).
+
+    Attributes:
+        cvs: The CVs, ordered by file name.
+        jobs: The job descriptions, ordered by file name.
+        facts: The extracted facts per CV ID.
+        attributes: The calculated attributes per CV ID.
+        ranked_candidates: Per job ID, every CV ID with its score, best first.
+        ranked_jobs: Per CV ID, every job ID with its score, best first.
+        recommendations: Per (job ID, CV ID) pair, the recommendation.
+        failures: The failed LLM calls, in the order they were recorded.
+    """
+
+    cvs: tuple[Document, ...]
+    jobs: tuple[Document, ...]
+    facts: Mapping[str, CvFacts]
+    attributes: Mapping[str, CalculatedAttributes]
+    ranked_candidates: Mapping[str, tuple[tuple[str, float | None], ...]]
+    ranked_jobs: Mapping[str, tuple[tuple[str, float | None], ...]]
+    recommendations: Mapping[tuple[str, str], Recommendation]
+    failures: tuple[Failure, ...]
