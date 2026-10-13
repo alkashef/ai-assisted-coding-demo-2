@@ -9,7 +9,6 @@ history is the record. Template: `docs/workflow.md`.
 
 | Milestone | Description | Model | Effort | Status |
 | --- | --- | --- | --- | --- |
-| **M1** Calculated attributes | Pure date math from facts: total period, jobs held, average, gaps, graduation, employed, countries, companies, last job | sonnet | high | open |
 | **M2** Settings and file reading | Typed settings from `config/.env` with the key hidden; read the CV and job-description folders | sonnet | medium | open |
 | **M3** LLM contract and request text | Ports, reply schemas, extraction and recommendation request and reply handling | sonnet | high | open |
 | **M4** OpenAI client | The only module that calls OpenAI: structured replies and embeddings, errors wrapped as `LlmError` | sonnet | high | open |
@@ -24,14 +23,6 @@ history is the record. Template: `docs/workflow.md`.
 | **M13** Candidate view UI | Raw CV, attributes and ranked job descriptions | sonnet | medium | open |
 
 ## Milestones
-
-### M1 — Calculated attributes
-
-- **Refs:** CAL-001, CAL-002, CAL-003, CAL-004, CAL-005, CAL-007, CAL-008, EXT-007, EXT-008, EXT-009, EX-001, EX-002; DEC-005, design section 3 (records and calculation rules).
-- **Owner:** `src/records.py` and `src/attributes.py`.
-- **Tests first:** in `tests/unit/test_attributes.py`: `test_cal_008_duration_counts_both_months`, `test_cal_008_present_is_the_current_month`, `test_cal_001_total_period_is_first_start_to_current_month` (EX-001: 106), `test_cal_002_job_count` (EX-001: 3), `test_cal_003_average_is_sum_of_durations_over_job_count` (EX-001: 35.3), `test_cal_004_back_to_back_jobs_have_no_gap` (EX-001), `test_cal_004_gap_is_months_between_end_and_next_start`, `test_cal_004_overlapping_jobs_have_no_gap`, `test_cal_005_months_since_most_recent_graduation` (EX-002: 102), `test_cal_005_no_graduation_gives_none`, `test_cal_007_employed_when_latest_job_has_no_end`, `test_cal_007_not_employed_when_latest_job_has_an_end`, `test_ext_007_distinct_job_countries`, `test_ext_008_distinct_employers`, `test_ext_009_last_job_is_the_one_with_latest_start`, `test_cal_001_no_jobs_gives_none`.
-- **Build:** frozen dataclasses in `records.py` (`Document`, `YearMonth`, `Job`, `Education`, `CvFacts`, `CalculatedAttributes`); pure functions in `attributes.py` that take the facts and today's date and return the calculated attributes and the derived lists. No I/O, no clock.
-- **Gate:** the tests and the checks in `CLAUDE.md` pass (`python scripts/check.py`); EX-001 and EX-002 are reproduced exactly; `docs/design.md` section 3 is still accurate.
 
 ### M2 — Settings and file reading
 
