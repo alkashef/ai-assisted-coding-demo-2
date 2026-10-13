@@ -9,7 +9,6 @@ history is the record. Template: `docs/workflow.md`.
 
 | Milestone | Description | Model | Effort | Status |
 | --- | --- | --- | --- | --- |
-| **M2** Settings and file reading | Typed settings from `config/.env` with the key hidden; read the CV and job-description folders | sonnet | medium | open |
 | **M3** LLM contract and request text | Ports, reply schemas, extraction and recommendation request and reply handling | sonnet | high | open |
 | **M4** OpenAI client | The only module that calls OpenAI: structured replies and embeddings, errors wrapped as `LlmError` | sonnet | high | open |
 | **M5** Vector store and ranking | Chroma collection, cosine nearest, items without a vector ranked last | sonnet | high | open |
@@ -23,14 +22,6 @@ history is the record. Template: `docs/workflow.md`.
 | **M13** Candidate view UI | Raw CV, attributes and ranked job descriptions | sonnet | medium | open |
 
 ## Milestones
-
-### M2 — Settings and file reading
-
-- **Refs:** EXT-001, JOB-001, NFR-002; DEC-009, DEC-013, design section 2.3.
-- **Owner:** `src/config.py`, `src/file_reader.py`, `config/.env.example`, `config/.env`.
-- **Tests first:** in `tests/unit/test_file_reader.py`: `test_ext_001_reads_every_text_file_in_the_cv_folder`, `test_job_001_reads_every_text_file_in_the_job_folder`, `test_ext_001_missing_folder_stops_with_a_clear_message`, `test_ext_001_prompt_file_is_read_as_text`. In `tests/unit/test_config.py`: `test_nfr_002_settings_text_hides_the_api_key`, `test_nfr_002_log_summary_of_settings_omits_the_api_key`, `test_nfr_002_missing_setting_error_names_the_key_not_a_value`, `test_dec_013_server_host_comes_from_the_setting`.
-- **Build:** `config.py` loads `config/.env` with `python-dotenv`, lets a real environment variable override it, and returns frozen settings objects grouped per component; the code has no defaults and a missing or invalid value fails at start-up. `file_reader.py` reads documents (ID is the file name, UTF-8, sorted by name) and single text files. Add every key in design section 2.3 to `config/.env.example` (non-secret keys with their default, `OPENAI_API_KEY` empty) and to the local `config/.env`.
-- **Gate:** the tests and the checks pass; `config/.env` is not committed; every key in design section 2.3 is in `config/.env.example`.
 
 ### M3 — LLM contract and request text
 
