@@ -56,6 +56,19 @@ export function parseRoute(hash) {
 }
 
 /**
+ * Tells whether the address names exactly this item. An ID is unique only within its kind, so the
+ * kind must match as well.
+ * @param {string} hash The address hash, such as "#/jobs/j1.txt".
+ * @param {"jobs" | "candidates"} kind The kind of item.
+ * @param {string} id The item ID.
+ * @returns {boolean} `true` when the hash names this kind and this ID.
+ */
+export function isRoute(hash, kind, id) {
+  const route = parseRoute(hash);
+  return route?.kind === kind && route.id === id;
+}
+
+/**
  * Clones the item template and fills it with one entry.
  * @param {HTMLTemplateElement} template The navigation item template.
  * @param {NavEntry} entry The entry to show.

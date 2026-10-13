@@ -13,6 +13,7 @@ import { renderJobView } from "./job-view.js";
 import {
   candidateEntries,
   foldOnPhone,
+  isRoute,
   jobEntries,
   markCurrent,
   parseRoute,
@@ -46,7 +47,7 @@ function handleCrash(error) {
  */
 async function showJob(job) {
   const ranked = await api.listRankedCandidates(job.id);
-  if (parseRoute(location.hash)?.id !== job.id) {
+  if (!isRoute(location.hash, "jobs", job.id)) {
     return;
   }
   const templates = {
@@ -65,7 +66,7 @@ async function showJob(job) {
 async function showCandidate(candidateId) {
   const candidate = await api.getCandidate(candidateId);
   const jobs = candidate === null ? [] : await api.listRankedJobs(candidateId);
-  if (parseRoute(location.hash)?.id !== candidateId) {
+  if (!isRoute(location.hash, "candidates", candidateId)) {
     return;
   }
   const templates = {

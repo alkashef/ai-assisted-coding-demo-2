@@ -9,7 +9,6 @@ history is the record. Template: `docs/workflow.md`.
 
 | Milestone | Description | Model | Effort | Status |
 | --- | --- | --- | --- | --- |
-| **M15** Stale-response guard | The page ignores a late response unless both the kind and the ID still match the address (design section 3) | sonnet | medium | open |
 | **M16** End states and impossible dates | `Job.is_current`, the extraction reply, and the "Not available" rules in `attributes.py` (CAL-007, CAL-009, CAL-010, DEC-015) | sonnet | high | open |
 | **M17** Show the unknown end | `is_current` in the API's last job, the recommendation facts, and the page ("Present" or "Not available") (DEC-015) | sonnet | medium | open |
 | **M18** Prompt isolation | Prompt files become system text, and the documents go in as tagged, escaped user text (DEC-016) | opus | high | open |
@@ -19,14 +18,6 @@ history is the record. Template: `docs/workflow.md`.
 | **M22** Gold file draft | Drafts `data/sample/gold_jobs.json` from the 10 sample CVs, with a `.gitignore` exception (NFR-005, DEC-017) | sonnet | high | open |
 
 ## Milestones
-
-### M15 — Stale-response guard
-
-- **Refs:** design section 3 (an ID is unique only within its kind), JOB-002, CND-001, CND-003.
-- **Owner:** `src/web/js/list-view.js` (a pure `isRoute(hash, kind, id)`), `src/web/js/main.js` (uses it in both guards).
-- **Tests first:** in `tests/unit/list-view.test.js`: `isRoute matches the kind and the ID`, `isRoute rejects the same ID of the other kind`, `isRoute rejects a different ID`. In `tests/e2e/ui/test_stale_response.py`: `test_jobs_and_candidates_ui_late_response_does_not_replace_the_current_view` (a fake workspace where a job and a candidate share an ID; the first response is delayed with a Playwright route).
-- **Build:** add `isRoute` to `list-view.js`; replace the two `parseRoute(...)?.id !== ...` comparisons in `main.js` with it. No other change.
-- **Gate:** the tests, `npm run typecheck`, `npm run lint`, `npm run lint:css`, `npm run format:check`, `npm test` and the Python checks pass.
 
 ### M16 — End states and impossible dates
 

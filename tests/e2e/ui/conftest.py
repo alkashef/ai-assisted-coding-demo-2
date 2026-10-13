@@ -115,6 +115,20 @@ def _ranked_workspace() -> Workspace:
     )
 
 
+def _shared_id_workspace() -> Workspace:
+    """A job description and a candidate that have the same ID (an ID is unique only per kind)."""
+    return Workspace(
+        cvs=(Document("same.txt", "Cv"),),
+        jobs=(Document("same.txt", "Data Analyst\nInvented details"),),
+        facts={"same.txt": _facts("Ada Invented")},
+        attributes={},
+        ranked_candidates={"same.txt": (("same.txt", 0.5),)},
+        ranked_jobs={"same.txt": (("same.txt", 0.5),)},
+        recommendations={},
+        failures=(),
+    )
+
+
 def _free_port() -> int:
     with socket.socket() as probe:
         probe.bind(("127.0.0.1", 0))
@@ -158,6 +172,13 @@ def base_url() -> Iterator[str]:
 def ranked_base_url() -> Iterator[str]:
     """Serves the real front end with a workspace that holds rankings and recommendations."""
     with _serve(_ranked_workspace()) as url:
+        yield url
+
+
+@pytest.fixture(scope="session")
+def shared_id_base_url() -> Iterator[str]:
+    """Serves the real front end with a job and a candidate that share an ID."""
+    with _serve(_shared_id_workspace()) as url:
         yield url
 
 
