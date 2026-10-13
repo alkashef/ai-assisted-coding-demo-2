@@ -2,7 +2,7 @@
 
 ## Project
 
-- Purpose: An app that takes a folder of CVs/resumes in PDF format and extracts information from each one. The user enters a search criteria. The app finds and ranks the best matching CVs. The search must be intelligent and semantic, not only keyword matching. This is a demo light-weight app.
+- Purpose: An app that takes a folder of CVs/resumes in plain-text format and extracts information from each one. The user enters a search criteria. The app finds and ranks the best matching CVs. The search must be intelligent and semantic, not only keyword matching. This is a demo light-weight app.
 - Stack: Python 3.12, conda environment `ai-assisted-coding-demo-2`, pytest, ruff, mypy
 - Test command: python -m pytest --cov=src --cov-branch --cov-fail-under=80
 - Run command: python main.py

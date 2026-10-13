@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>CV Matcher: phone width</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./mockup.css">
+</head>
+<body>
+<x-dc>
+<div class="app">
+  <header class="app__header">
+    <h1 class="app__title">CV Matcher</h1>
+    <p class="app__tagline">Rank CVs against job descriptions</p>
+  </header>
+  <div class="app__body" style="padding: 16px; gap: 16px">
+    <nav class="app__nav" aria-label="Job descriptions and candidates" style="max-width: none">
+      <details class="nav-fold">
+        <summary class="nav-fold__summary">Job descriptions and candidates</summary>
+        <div class="nav-fold__body">
+          <section class="nav__group">
+            <h2 class="nav__heading">Job descriptions (3)</h2>
+            <ul class="nav__list">
+              <li><a class="nav__link nav__link--current" href="Mobile-job-view.dc.html" aria-current="page"><span>Healthcare Data Analyst</span><span class="nav__id">29243</span></a></li>
+              <li><a class="nav__link" href="Mobile-job-view.dc.html"><span>Senior Mechanical/HVAC Engineer</span><span class="nav__id">32447</span></a></li>
+              <li><a class="nav__link" href="Mobile-job-view.dc.html"><span>Retail Mortgage Loan Closer</span><span class="nav__id">38671</span></a></li>
+            </ul>
+          </section>
+        </div>
+      </details>
+    </nav>
+    <main class="app__main">
+      <div class="page-head">
+        <h2 class="page-head__title">Healthcare Data Analyst</h2>
+        <p class="page-head__meta">Job description 29243. All 10 candidates, best match first.</p>
+      </div>
+      <ol class="cards">
+        <li class="card">
+          <div class="card__head">
+            <span class="card__rank">1</span>
+            <div class="card__who">
+              <h3 class="card__name"><a href="Mobile-job-view.dc.html">Priya Raman</a></h3>
+              <p class="card__sub">CV 3138. Senior Healthcare Data Analyst. Boston, United States</p>
+            </div>
+            <div class="card__score"><span class="card__score-label">Similarity</span><span class="card__score-value">0.71</span></div>
+            <span class="badge badge--positive">Interview</span>
+          </div>
+          <p class="card__reason">Eight years of healthcare reporting and ETL work match the pipeline, dashboard and data-quality duties.</p>
+          <dl class="card__stats">
+            <div class="stat"><dt class="stat__label">Total employment</dt><dd class="stat__value">106 months</dd></div>
+            <div class="stat"><dt class="stat__label">Jobs held</dt><dd class="stat__value">3</dd></div>
+            <div class="stat"><dt class="stat__label">Average per job</dt><dd class="stat__value">35.3 months</dd></div>
+            <div class="stat"><dt class="stat__label">Employment gaps</dt><dd class="stat__value">None</dd></div>
+            <div class="stat"><dt class="stat__label">Currently employed</dt><dd class="stat__value">Yes</dd></div>
+            <div class="stat"><dt class="stat__label">Since graduation</dt><dd class="stat__value">102 months</dd></div>
+          </dl>
+          <p class="card__last-job"><strong>Last job.</strong> Senior Healthcare Data Analyst at Northwind Health Analytics, Boston, United States. 58 months. Leads reporting pipelines and dashboards for hospital quality metrics.</p>
+          <details class="card__more">
+            <summary class="card__more-summary">More attributes</summary>
+            <dl class="facts" style="grid-template-columns: minmax(0, 1fr)">
+              <dt class="facts__label">Highest degree</dt><dd class="facts__value">Master of Science in Health Informatics</dd>
+              <dt class="facts__label">Countries worked in</dt><dd class="facts__value">United States, Singapore</dd>
+              <dt class="facts__label">Companies</dt><dd class="facts__value">Northwind Health Analytics, Lakeside Clinics, Brightpath Labs</dd>
+            </dl>
+          </details>
+        </li>
+        <li class="card">
+          <div class="card__head">
+            <span class="card__rank">2</span>
+            <div class="card__who">
+              <h3 class="card__name"><a href="Mobile-job-view.dc.html">Dana Whitfield</a></h3>
+              <p class="card__sub">CV 1129. Data Analyst. Manchester, United Kingdom</p>
+            </div>
+            <div class="card__score"><span class="card__score-label">Similarity</span><span class="card__score-value">0.66</span></div>
+            <span class="badge badge--positive">Interview</span>
+          </div>
+          <p class="card__reason">Strong analytics and dashboard background in a regulated setting.</p>
+        </li>
+      </ol>
+    </main>
+  </div>
+  <footer class="app__footer">Sample data: TalentCLEF 2026 (synthetic records, CC BY 4.0).</footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":1700}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

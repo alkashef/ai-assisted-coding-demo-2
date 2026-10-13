@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>CV Matcher: states</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./mockup.css">
+</head>
+<body>
+<x-dc>
+<div class="app">
+  <header class="app__header">
+    <h1 class="app__title">States and components</h1>
+    <p class="app__tagline">Missing values, failures, navigation states and an unknown item</p>
+  </header>
+  <div class="sheet">
+    <section>
+      <p class="sheet__caption">Failure notice (ERR-001, ERR-002)</p>
+      <details class="notice" role="status" open>
+        <summary class="notice__summary">3 results could not be computed</summary>
+        <ul class="notice__list">
+          <li>CV 4131: the OpenAI request for the extraction timed out.</li>
+          <li>CV 1708: the OpenAI request for the embedding was rejected (invalid API key).</li>
+          <li>Job description 38671 and CV 857: the OpenAI reply for the recommendation did not match the expected format.</li>
+        </ul>
+      </details>
+      <p class="sheet__caption">Empty selection</p>
+      <section class="panel">
+        <h2 class="panel__title">Select an item to start</h2>
+        <p class="panel__text">Select a job description or a candidate in the list.</p>
+      </section>
+    </section>
+    <section>
+      <p class="sheet__caption">Candidate with missing results (MIS-001, MIS-002)</p>
+      <div class="card">
+        <div class="card__head">
+          <span class="card__rank">10</span>
+          <div class="card__who">
+            <h3 class="card__name">Tomasz Wrobel</h3>
+            <p class="card__sub">CV 4131. <span class="not-available">Not available</span></p>
+          </div>
+          <div class="card__score"><span class="card__score-label">Similarity</span><span class="card__score-value not-available">Not available</span></div>
+          <span class="badge badge--neutral">Not available</span>
+        </div>
+        <p class="card__reason"><span class="not-available">Not available</span></p>
+        <dl class="card__stats">
+          <div class="stat"><dt class="stat__label">Total employment</dt><dd class="stat__value"><span class="not-available">Not available</span></dd></div>
+          <div class="stat"><dt class="stat__label">Jobs held</dt><dd class="stat__value"><span class="not-available">Not available</span></dd></div>
+          <div class="stat"><dt class="stat__label">Average per job</dt><dd class="stat__value"><span class="not-available">Not available</span></dd></div>
+          <div class="stat"><dt class="stat__label">Employment gaps</dt><dd class="stat__value"><span class="not-available">Not available</span></dd></div>
+          <div class="stat"><dt class="stat__label">Currently employed</dt><dd class="stat__value"><span class="not-available">Not available</span></dd></div>
+          <div class="stat"><dt class="stat__label">Since graduation</dt><dd class="stat__value"><span class="not-available">Not available</span></dd></div>
+        </dl>
+      </div>
+    </section>
+    <section>
+      <p class="sheet__caption">Navigation item states</p>
+      <ul class="nav__list">
+        <li><a class="nav__link" href="Main.dc.html"><span>Default</span><span class="nav__id">1129</span></a></li>
+        <li><a class="nav__link" href="Main.dc.html" style="background: var(--color-hover)"><span>Hover</span><span class="nav__id">1129</span></a></li>
+        <li><a class="nav__link nav__link--current" href="Main.dc.html" aria-current="page"><span>Current</span><span class="nav__id">1129</span></a></li>
+        <li><a class="nav__link" href="Main.dc.html" style="outline: 2px solid var(--color-accent); outline-offset: 2px"><span>Keyboard focus</span><span class="nav__id">1129</span></a></li>
+      </ul>
+      <p class="sheet__caption" style="margin-top: 24px">Recommendation badges</p>
+      <p style="display: flex; flex-wrap: wrap; gap: 8px; margin: 0">
+        <span class="badge badge--positive">Interview</span>
+        <span class="badge badge--negative">Do not interview</span>
+        <span class="badge badge--neutral">Not available</span>
+      </p>
+    </section>
+    <section>
+      <p class="sheet__caption">Unknown item (404)</p>
+      <section class="panel">
+        <h2 class="panel__title">Candidate not found</h2>
+        <p class="panel__text">No candidate with ID 9999 is in the CV folder. Select a candidate from the list.</p>
+      </section>
+    </section>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":1300}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

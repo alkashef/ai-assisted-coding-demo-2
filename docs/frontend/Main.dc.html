@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>CV Matcher: start page</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./mockup.css">
+</head>
+<body>
+<x-dc>
+<div class="app">
+  <header class="app__header">
+    <h1 class="app__title">CV Matcher</h1>
+    <p class="app__tagline">Rank CVs against job descriptions</p>
+  </header>
+  <div class="app__body">
+    <nav class="app__nav" aria-label="Job descriptions and candidates">
+      <section class="nav__group">
+        <h2 class="nav__heading">Job descriptions (3)</h2>
+        <ul class="nav__list">
+          <li><a class="nav__link" href="Job-view.dc.html"><span>Healthcare Data Analyst</span><span class="nav__id">29243</span></a></li>
+          <li><a class="nav__link" href="Job-view.dc.html"><span>Senior Mechanical/HVAC Engineer</span><span class="nav__id">32447</span></a></li>
+          <li><a class="nav__link" href="Job-view.dc.html"><span>Retail Mortgage Loan Closer</span><span class="nav__id">38671</span></a></li>
+        </ul>
+      </section>
+      <section class="nav__group">
+        <h2 class="nav__heading">Candidates (10)</h2>
+        <ul class="nav__list">
+          <li><a class="nav__link" href="Candidate-view.dc.html"><span>Benjamin Castellano</span><span class="nav__id">4692</span></a></li>
+          <li><a class="nav__link" href="Candidate-view.dc.html"><span>Dana Whitfield</span><span class="nav__id">1129</span></a></li>
+          <li><a class="nav__link" href="Candidate-view.dc.html"><span>Grace Mwangi</span><span class="nav__id">3720</span></a></li>
+          <li><a class="nav__link" href="Candidate-view.dc.html"><span>Kenji Aoki</span><span class="nav__id">2889</span></a></li>
+          <li><a class="nav__link" href="Candidate-view.dc.html"><span>Lena Hartmann</span><span class="nav__id">4404</span></a></li>
+          <li><a class="nav__link" href="Candidate-view.dc.html"><span>Marcus Oyelaran</span><span class="nav__id">2506</span></a></li>
+          <li><a class="nav__link" href="Candidate-view.dc.html"><span>Omar Haddad</span><span class="nav__id">857</span></a></li>
+          <li><a class="nav__link" href="Candidate-view.dc.html"><span>Priya Raman</span><span class="nav__id">3138</span></a></li>
+          <li><a class="nav__link" href="Candidate-view.dc.html"><span>Sofia Lindqvist</span><span class="nav__id">1708</span></a></li>
+          <li><a class="nav__link" href="Candidate-view.dc.html"><span>Tomasz Wrobel</span><span class="nav__id">4131</span></a></li>
+        </ul>
+      </section>
+    </nav>
+    <main class="app__main">
+      <details class="notice" role="status" open>
+        <summary class="notice__summary">2 results could not be computed</summary>
+        <ul class="notice__list">
+          <li>CV 4131: the OpenAI request for the extraction timed out.</li>
+          <li>CV 1708 and job description 38671: the OpenAI request for the recommendation was rejected (rate limit).</li>
+        </ul>
+      </details>
+      <section class="panel">
+        <h2 class="panel__title">Select an item to start</h2>
+        <p class="panel__text">Select a job description to see all candidates ranked by how well they match it. Select a candidate to see the CV, the extracted and calculated attributes, and the job descriptions ranked for that candidate.</p>
+      </section>
+    </main>
+  </div>
+  <footer class="app__footer">Sample data: TalentCLEF 2026 (synthetic records, CC BY 4.0).</footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":860}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>
