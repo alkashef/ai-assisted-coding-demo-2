@@ -176,6 +176,12 @@ Rules for the calculations (CAL-008, EX-001, EX-002):
 - A bad date never changes the extracted facts: the dates are shown as written.
 - EXT-007 is the distinct job countries. EXT-008 is the distinct employers. EXT-009 is the job with the latest start.
 
+Evaluation files (DEC-017), read by `main.py` through the file reader and parsed by `src/evaluation.py`:
+
+- `ground_truth.tsv`: a `job_id<TAB>cv_id` header, then one labeled-relevant pair per line. The IDs are the dataset IDs; the parser adds `.txt` to match the file names.
+- `gold_jobs.json`: `attribution` (the dataset attribution line) and `cvs`, which maps each CV ID (file name) to a list of jobs, each with `start` (`YYYY-MM`), `end` (`YYYY-MM` or `null`) and `is_current` (true or false).
+- A check with nothing to check fails: no labeled job description, or no gold job. An unreadable file or a wrong format stops the run with a message before any LLM call.
+
 LLM output contract (a `pydantic` model in `src/llm_schemas.py`, validated by the SDK, DEC-011):
 
 - Extraction reply: the `CvFacts` fields, dates as `YYYY-MM` or `null`. Each job has `is_current`, true only when the CV marks the job current. A year-only end is `null` with `is_current` false. A job with `is_current` true and an `end` is refused as `LlmOutputError` (DEC-015).

@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pytest
 
-from src.config import ConfigError, Settings, load_settings, settings_summary
+from src.config import ConfigError, EvaluationSettings, Settings, load_settings, settings_summary
 
 _KEY = "sk-test-secret-123"
 
@@ -20,6 +20,11 @@ _VALUES = {
     "JOB_FOLDER": "jobs",
     "EXTRACT_PROMPT_PATH": "p1.md",
     "MATCH_PROMPT_PATH": "p2.md",
+    "EVAL_GROUND_TRUTH_PATH": "truth.tsv",
+    "EVAL_GOLD_JOBS_PATH": "gold.json",
+    "EVAL_TOP_K": "3",
+    "EVAL_MIN_RELEVANT_IN_TOP_K": "2",
+    "EVAL_MIN_DATE_MATCH_PERCENT": "90",
     "WEB_ROOT": "web",
     "SERVER_HOST": "127.0.0.1",
     "SERVER_PORT": "8000",
@@ -85,3 +90,27 @@ def test_nfr_002_environment_overrides_the_env_file(tmp_path: Path) -> None:
 
     assert settings.llm.model == "model-b"
     assert settings.llm.max_tokens == 100
+
+
+def test_dec_017_loads_the_five_evaluation_settings(tmp_path: Path) -> None:
+    settings = _load(tmp_path, {**_VALUES, "EVAL_TOP_K": "4", "EVAL_MIN_DATE_MATCH_PERCENT": "75"})
+
+    assert settings.evaluation == EvaluationSettings(
+        ground_truth_path=Path("truth.tsv"),
+        gold_jobs_path=Path("gold.json"),
+        top_k=4,
+        min_relevant_in_top_k=2,
+        min_date_match_percent=75,
+    )
+
+
+def test_dec_017_a_missing_evaluation_setting_names_the_key(tmp_path: Path) -> None:
+    environ = {k: v for k, v in _VALUES.items() if k != "EVAL_TOP_K"}
+
+    with pytest.raises(ConfigError, match="EVAL_TOP_K"):
+        _load(tmp_path, environ)
+
+
+def test_dec_017_a_percent_above_100_is_rejected(tmp_path: Path) -> None:
+    with pytest.raises(ConfigError, match="EVAL_MIN_DATE_MATCH_PERCENT"):
+        _load(tmp_path, {**_VALUES, "EVAL_MIN_DATE_MATCH_PERCENT": "101"})

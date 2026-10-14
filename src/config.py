@@ -41,6 +41,17 @@ class InputSettings:
 
 
 @dataclass(frozen=True)
+class EvaluationSettings:
+    """Settings for `main.py --evaluate`: the two evaluation files and the limits (DEC-017)."""
+
+    ground_truth_path: Path
+    gold_jobs_path: Path
+    top_k: int
+    min_relevant_in_top_k: int
+    min_date_match_percent: int
+
+
+@dataclass(frozen=True)
 class ServerSettings:
     """Settings for the web server and the static front end."""
 
@@ -63,6 +74,7 @@ class Settings:
 
     llm: LlmSettings
     inputs: InputSettings
+    evaluation: EvaluationSettings
     server: ServerSettings
     log: LogSettings
 
@@ -82,6 +94,13 @@ def _number(values: Mapping[str, str], key: str) -> int:
         raise ConfigError(f"Invalid setting (not a whole number): {key}") from err
     if number <= 0:
         raise ConfigError(f"Invalid setting (must be above zero): {key}")
+    return number
+
+
+def _percent(values: Mapping[str, str], key: str) -> int:
+    number = _number(values, key)
+    if number not in range(1, 101):
+        raise ConfigError(f"Invalid setting (must be at most 100): {key}")
     return number
 
 
@@ -116,6 +135,13 @@ def load_settings(env_file: Path, environ: Mapping[str, str] | None = None) -> S
             extract_prompt_path=Path(_text(values, "EXTRACT_PROMPT_PATH")),
             match_prompt_path=Path(_text(values, "MATCH_PROMPT_PATH")),
         ),
+        evaluation=EvaluationSettings(
+            ground_truth_path=Path(_text(values, "EVAL_GROUND_TRUTH_PATH")),
+            gold_jobs_path=Path(_text(values, "EVAL_GOLD_JOBS_PATH")),
+            top_k=_number(values, "EVAL_TOP_K"),
+            min_relevant_in_top_k=_number(values, "EVAL_MIN_RELEVANT_IN_TOP_K"),
+            min_date_match_percent=_percent(values, "EVAL_MIN_DATE_MATCH_PERCENT"),
+        ),
         server=ServerSettings(
             host=_text(values, "SERVER_HOST"),
             port=_number(values, "SERVER_PORT"),
@@ -128,6 +154,6 @@ def load_settings(env_file: Path, environ: Mapping[str, str] | None = None) -> S
 def settings_summary(settings: Settings) -> str:
     """Returns the settings as text for the log, without the API key."""
     return (
-        f"llm={settings.llm}, inputs={settings.inputs}, "
+        f"llm={settings.llm}, inputs={settings.inputs}, evaluation={settings.evaluation}, "
         f"server={settings.server}, log={settings.log}"
     )

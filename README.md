@@ -19,7 +19,7 @@ Requirements are in `docs/spec.md`, decisions in `docs/design.md`.
 
 | Path | Holds |
 | --- | --- |
-| `main.py` | The entry point: loads settings, runs the start-up pipeline, starts the server. |
+| `main.py` | The entry point: loads settings, runs the start-up pipeline, then starts the server, or with `--evaluate` prints the evaluation report. |
 | `src/` | All source code. `src/api/` is the HTTP layer, `src/web/` the front end (`index.html`, `css/`, `js/`). |
 | `tests/` | `unit/` tests (Python, and `format.test.js` for the front end), `e2e/` API tests and `e2e/ui/` headless-browser tests. |
 | `docs/` | Workflow, spec, design, plan, and the UI mockups in `docs/frontend/`. |
@@ -54,7 +54,7 @@ Requirements are in `docs/spec.md`, decisions in `docs/design.md`.
    python scripts/build_sample.py data/TaskA/development/en data/sample --jobs 29243 32447 38671 --counts 4 3 3
    ```
 
-   This writes `data/sample/cvs/`, `data/sample/job_descriptions/` and `ground_truth.tsv`. The raw files are only read. To use your own files instead, point `CV_FOLDER` and `JOB_FOLDER` at folders of `.txt` files.
+   This writes `data/sample/cvs/`, `data/sample/job_descriptions/` and `ground_truth.tsv`. The evaluation (see "Evaluation") also reads `data/sample/gold_jobs.json`, which is not made by this script. The raw files are only read. To use your own files instead, point `CV_FOLDER` and `JOB_FOLDER` at folders of `.txt` files.
 
 4. Check the external service before the first run. The app sends CV text and job description text to OpenAI (`docs/design.md`, DEC-006) and nowhere else. Confirm that the key is valid, and that `LLM_MODEL` and `EMBEDDING_MODEL` in `config/.env` are model IDs your key can use. The defaults are untested until the first live run (see "Manual live check").
 
@@ -72,6 +72,19 @@ python main.py
 
 The app first runs the start-up pipeline: it logs its progress and calls OpenAI (about 53 calls for the sample). Then it serves the page at `http://127.0.0.1:8000` (the host and port are in `config/.env`). The log is also written to `logs/app.log`.
 
+### Evaluation
+
+```bash
+python main.py --evaluate
+```
+
+This builds the same workspace as a normal run (the same OpenAI calls), then prints a report instead of starting the server, and exits with code 1 if a check fails. The report gives counts and PASS or FAIL, never CV content. It checks two things on the sample, with the limits in the `EVAL_*` keys of `config/.env`:
+
+- NFR-004: for each job description in `data/sample/ground_truth.tsv`, at least `EVAL_MIN_RELEVANT_IN_TOP_K` of the `EVAL_TOP_K` best-ranked CVs are labeled relevant.
+- NFR-005: at least `EVAL_MIN_DATE_MATCH_PERCENT` percent of the jobs in `data/sample/gold_jobs.json` have an extracted job with the same start month, end month and current marker.
+
+NFR-004 and NFR-005 need one manual run by you with the real service. The automated tests use fakes, and `--evaluate` has not been run against the live service. `gold_jobs.json` is in the format described in `docs/design.md` section 3 and counts only after you have reviewed it.
+
 ## How to test
 
 ```bash
@@ -87,5 +100,5 @@ The pytest run includes the headless-browser tests in `tests/e2e/ui/`. They star
 The automated tests use fakes, so one run with the real service is the user's check (DEC-003, DEC-004):
 
 1. Run `python main.py` on the sample and wait for the page to be served.
-2. For each job description, compare the order of the candidates with `data/sample/ground_truth.tsv`, which lists the CVs the dataset labels relevant. Those CVs should rank above the others.
+2. For each job description, compare the order of the candidates with `data/sample/ground_truth.tsv`, which lists the CVs the dataset labels relevant. Those CVs should rank above the others. `python main.py --evaluate` (see "Evaluation") does this check for you.
 3. Record the failure rate (`GET /api/failures`, or the failure notice on the start page) against the 40 expected LLM calls, the model IDs used (`LLM_MODEL`, `EMBEDDING_MODEL`) and the cost shown on the OpenAI usage page.
