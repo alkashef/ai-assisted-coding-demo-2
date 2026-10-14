@@ -1,34 +1,31 @@
-"""Builds the recommendation request text and turns the validated reply into a recommendation.
+"""Builds the recommendation user text and turns the validated reply into a recommendation.
 
-Pure and synchronous. It does not call the LLM (`llm_client.py` does). Implements REC-001 and
-DEC-006: the request carries the job description and the candidate's extracted facts, never the
-name or the address. CV facts hold no contact details.
+Pure and synchronous. It does not call the LLM (`llm_client.py` does) or read the prompt file,
+which is the system text. Implements REC-001, DEC-006 and DEC-016: the user text carries the job
+description and the candidate's extracted facts as tagged data, never the name or the address.
+CV facts hold no contact details.
 """
 
 import json
 
 from src.llm_schemas import RecommendationReply
+from src.prompt_data import Tag, tagged
 from src.records import CvFacts, Education, Job, Recommendation, YearMonth
 
-_JOB_TEXT_PLACEHOLDER = "{{JOB_TEXT}}"
-_CANDIDATE_FACTS_PLACEHOLDER = "{{CANDIDATE_FACTS}}"
 
-
-def build_recommendation_request(template: str, job_text: str, facts: CvFacts) -> str:
-    """Fills the job description and the candidate facts into the recommendation prompt.
+def build_recommendation_user_text(job_text: str, facts: CvFacts) -> str:
+    """Builds the user text of the recommendation request: the job and the facts as tagged data.
 
     Args:
-        template: The prompt text with the `{{JOB_TEXT}}` and `{{CANDIDATE_FACTS}}` placeholders.
         job_text: The full text of one job description.
         facts: The extracted facts of one candidate.
 
     Returns:
-        The request text to send to the LLM. The facts are JSON without name and address.
+        The job description inside `<job_description>` tags, then the facts as JSON without name
+        and address inside `<candidate_facts>` tags. Any copy of a known tag in either is escaped.
     """
     candidate = json.dumps(_facts_for_request(facts), ensure_ascii=False, indent=2)
-    return template.replace(_CANDIDATE_FACTS_PLACEHOLDER, candidate).replace(
-        _JOB_TEXT_PLACEHOLDER, job_text
-    )
+    return f"{tagged(Tag.JOB_DESCRIPTION, job_text)}\n\n{tagged(Tag.CANDIDATE_FACTS, candidate)}"
 
 
 def recommendation_from_reply(reply: RecommendationReply) -> Recommendation:

@@ -42,6 +42,7 @@ Flat Python modules under `src/`, an `api/` package for the HTTP layer and a `we
 | Entry | `main.py` | Loads config, sets up logging, creates the objects, runs the pipeline, then starts the server, or with `--evaluate` prints the evaluation report instead (DEC-017). No logic. | all |
 | Settings | `src/config.py` | The only module that reads `config/.env` and the environment. Returns typed settings. | NFR-002 |
 | Domain (pure, synchronous) | `src/records.py` | Typed records: documents, extracted facts, calculated attributes, recommendations, workspace. | all |
+| Domain | `src/prompt_data.py` | Wraps a document in a fixed tag and escapes any copy of the known tags inside it (DEC-016). The tag names are an enum. Standard library only. | NFR-001, EXT-002, REC-001 |
 | Domain | `src/extraction.py` | Builds the extraction user text (the tagged CV, DEC-016) and turns the validated reply into facts. A reply that gives both `is_current` and an `end` is refused. | EXT-002 to EXT-010, MIS-001 |
 | Domain | `src/attributes.py` | Calculates the CAL attributes and derives the EXT-007 to EXT-009 values from the facts and a given date. | CAL-001 to CAL-005, CAL-007 to CAL-010 |
 | Domain | `src/recommendation.py` | Builds the recommendation user text (the tagged job description and candidate facts, DEC-016) from the job description and the candidate facts (no name or contact), and turns the validated reply into a recommendation. | REC-001 |
@@ -61,7 +62,7 @@ Flat Python modules under `src/`, an `api/` package for the HTTP layer and a `we
 
 Import rules. A module imports only from rows above it, or from itself:
 
-- Domain modules import only `records` (and the standard library, plus `pydantic` for the schemas).
+- Domain modules import only `records` and `prompt_data` (and the standard library, plus `pydantic` for the schemas).
 - `pipeline` imports domain modules, `llm_schemas` and `ports`. It receives the file reader, the LLM client and the two vector stores as arguments.
 - `workspace_views` imports `records` and the pure functions of `attributes` (last job, distinct countries and employers). The pipeline has already ranked both ways.
 - `src/api/*` imports `workspace_views`, `records` and the schemas. A handler never imports a gateway, the pipeline or the domain directly.

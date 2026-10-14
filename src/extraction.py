@@ -1,33 +1,32 @@
-"""Builds the extraction request text and turns the validated reply into CV facts.
+"""Builds the extraction user text and turns the validated reply into CV facts.
 
-Pure and synchronous. It does not call the LLM (`llm_client.py` does) or read the prompt file
-(`file_reader.py` does). Implements EXT-002, EXT-003, EXT-004, EXT-006, EXT-009, EXT-010 and
-MIS-001 (DEC-005, DEC-015). A date that is not `YYYY-MM`, or a current job with an end, raises
-`LlmOutputError` (no repair, no retry).
+Pure and synchronous. It does not call the LLM (`llm_client.py` does) or read the prompt file,
+which is the system text (`file_reader.py` does). Implements EXT-002, EXT-003, EXT-004, EXT-006,
+EXT-009, EXT-010 and MIS-001 (DEC-005, DEC-015, DEC-016). A date that is not `YYYY-MM`, or a
+current job with an end, raises `LlmOutputError` (no repair, no retry).
 """
 
 import re
 
 from src.llm_schemas import CvFactsReply, EducationReply, JobReply
 from src.ports import LlmOutputError
+from src.prompt_data import Tag, tagged
 from src.records import CvFacts, Education, Job, YearMonth
 
-_CV_TEXT_PLACEHOLDER = "{{CV_TEXT}}"
 _DATE_PATTERN = re.compile(r"(\d{4})-(\d{2})")
 _LAST_MONTH = 12
 
 
-def build_extraction_request(template: str, cv_text: str) -> str:
-    """Fills the CV text into the extraction prompt.
+def build_extraction_user_text(cv_text: str) -> str:
+    """Builds the user text of the extraction request: the CV as tagged data (DEC-016).
 
     Args:
-        template: The prompt text with the `{{CV_TEXT}}` placeholder.
         cv_text: The full text of one CV.
 
     Returns:
-        The request text to send to the LLM.
+        The CV inside `<cv>` tags, with any copy of a known tag in it escaped.
     """
-    return template.replace(_CV_TEXT_PLACEHOLDER, cv_text)
+    return tagged(Tag.CV, cv_text)
 
 
 def facts_from_reply(reply: CvFactsReply) -> CvFacts:

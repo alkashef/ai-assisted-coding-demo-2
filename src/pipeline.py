@@ -3,8 +3,9 @@
 Reads both folders, embeds every document into the two vector stores, extracts every CV,
 calculates the attributes, ranks both ways and asks for one recommendation per pair (DEC-007).
 It does not read files, call OpenAI or Chroma itself: the reader, the LLM client and the vector
-stores are passed in. It builds no prompt text (`extraction.py` and `recommendation.py` do).
-Implements EXT-001, JOB-001, PRG-003, MIS-002, ERR-001, ERR-002, RNK-002 and REC-001.
+stores are passed in. Each prompt file is the system text as read; the user text with the tagged
+documents comes from `extraction.py` and `recommendation.py` (DEC-016). Implements EXT-001,
+JOB-001, PRG-003, MIS-002, ERR-001, ERR-002, RNK-002 and REC-001.
 
 The only place that catches `LlmError` (DEC-008): a failed call is recorded and the rest go on.
 """
@@ -18,17 +19,14 @@ from pathlib import Path
 from typing import Protocol
 
 from src.attributes import calculate_attributes
-from src.extraction import build_extraction_request, facts_from_reply
+from src.extraction import build_extraction_user_text, facts_from_reply
 from src.llm_schemas import CvFactsReply, RecommendationReply
 from src.ports import Embedder, LlmError, LlmOutputError, StructuredCompleter, VectorIndex
 from src.ranking import append_unscored
-from src.recommendation import build_recommendation_request, recommendation_from_reply
+from src.recommendation import build_recommendation_user_text, recommendation_from_reply
 from src.records import CvFacts, Document, Failure, Recommendation, Workspace
 
 logger = logging.getLogger(__name__)
-
-# The prompt files hold all the instructions, so the system text is empty.
-_SYSTEM_TEXT = ""
 
 
 class TextReader(Protocol):
@@ -67,12 +65,12 @@ class PipelineServices:
 
 @dataclass(frozen=True)
 class _Inputs:
-    """The documents and prompt templates read at the start of a run."""
+    """The documents and the two system texts (the prompt files) read at the start of a run."""
 
     cvs: list[Document]
     jobs: list[Document]
-    extract_template: str
-    match_template: str
+    extract_system_text: str
+    match_system_text: str
 
 
 class _GuardedCalls:
@@ -181,8 +179,8 @@ class Pipeline:
         inputs = _Inputs(
             cvs=reader.read_documents(settings.cv_folder),
             jobs=reader.read_documents(settings.job_folder),
-            extract_template=reader.read_text(settings.extract_prompt_path),
-            match_template=reader.read_text(settings.match_prompt_path),
+            extract_system_text=reader.read_text(settings.extract_prompt_path),
+            match_system_text=reader.read_text(settings.match_prompt_path),
         )
         logger.info("Read %d CVs and %d job descriptions", len(inputs.cvs), len(inputs.jobs))
         return inputs
@@ -193,28 +191,28 @@ class Pipeline:
 
     def _extraction_calls(self, inputs: _Inputs) -> dict[str, Awaitable[CvFacts]]:
         """Prepares one extraction call per CV."""
-        return {cv.doc_id: self._extract(inputs.extract_template, cv) for cv in inputs.cvs}
+        return {cv.doc_id: self._extract(inputs.extract_system_text, cv) for cv in inputs.cvs}
 
     def _recommendation_calls(
         self, inputs: _Inputs, facts: dict[str, CvFacts]
     ) -> dict[tuple[str, str], Awaitable[Recommendation]]:
         """Prepares one recommendation call per job and extracted CV."""
         return {
-            (job.doc_id, cv_id): self._recommend(inputs.match_template, job, cv_facts)
+            (job.doc_id, cv_id): self._recommend(inputs.match_system_text, job, cv_facts)
             for job in inputs.jobs
             for cv_id, cv_facts in facts.items()
         }
 
-    async def _extract(self, template: str, cv: Document) -> CvFacts:
+    async def _extract(self, system_text: str, cv: Document) -> CvFacts:
         """Asks the LLM for the facts of one CV."""
-        request = build_extraction_request(template, cv.text)
-        reply = await self._services.completer.complete(_SYSTEM_TEXT, request, CvFactsReply)
+        user_text = build_extraction_user_text(cv.text)
+        reply = await self._services.completer.complete(system_text, user_text, CvFactsReply)
         return facts_from_reply(reply)
 
-    async def _recommend(self, template: str, job: Document, facts: CvFacts) -> Recommendation:
+    async def _recommend(self, system_text: str, job: Document, facts: CvFacts) -> Recommendation:
         """Asks the LLM whether to interview one candidate for one job."""
-        request = build_recommendation_request(template, job.text, facts)
-        reply = await self._services.completer.complete(_SYSTEM_TEXT, request, RecommendationReply)
+        user_text = build_recommendation_user_text(job.text, facts)
+        reply = await self._services.completer.complete(system_text, user_text, RecommendationReply)
         return recommendation_from_reply(reply)
 
 

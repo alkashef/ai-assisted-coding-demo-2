@@ -11,7 +11,7 @@ from pydantic import BaseModel
 
 import src.pipeline
 from src.attributes import calculate_attributes
-from src.llm_schemas import CvFactsReply, JobReply
+from src.llm_schemas import CvFactsReply, JobReply, RecommendationReply
 from src.pipeline import Pipeline, PipelineServices, PipelineSettings
 from src.ports import LlmError, LlmOutputError
 from src.records import Document, Failure, Recommendation
@@ -21,8 +21,8 @@ CV_FOLDER = Path("cvs")
 JOB_FOLDER = Path("jobs")
 EXTRACT_PROMPT = Path("extract.md")
 MATCH_PROMPT = Path("match.md")
-EXTRACT_TEMPLATE = "Extract the facts.\n{{CV_TEXT}}"
-MATCH_TEMPLATE = "Match.\n{{JOB_TEXT}}\n{{CANDIDATE_FACTS}}"
+EXTRACT_TEMPLATE = "Extract the facts."
+MATCH_TEMPLATE = "Match."
 
 CVS = [
     Document("a.txt", "CV of a data analyst"),
@@ -87,6 +87,7 @@ class FakeLlm:
         self.error = error or LlmError("call with model m failed: APIConnectionError")
         self.embedded: Counter[str] = Counter()
         self.requests: list[str] = []
+        self.system_texts: dict[type[BaseModel], set[str]] = {}
         self.in_flight = 0
         self.max_in_flight = 0
 
@@ -105,6 +106,7 @@ class FakeLlm:
 
     async def complete[T: BaseModel](self, system: str, user: str, schema: type[T]) -> T:
         self.requests.append(user)
+        self.system_texts.setdefault(schema, set()).add(system)
         await self._enter(user)
         if schema is CvFactsReply:
             return schema.model_validate(self.facts.model_dump())
@@ -167,8 +169,8 @@ async def test_prg_003_each_cv_is_extracted_once():
 
     workspace = await _pipeline(llm).build(TODAY)
 
-    extraction_requests = [r for r in llm.requests if r.startswith("Extract the facts.")]
-    assert sorted(extraction_requests) == sorted(f"Extract the facts.\n{cv.text}" for cv in CVS)
+    extraction_requests = [r for r in llm.requests if r.startswith("<cv>")]
+    assert sorted(extraction_requests) == sorted(f"<cv>\n{cv.text}\n</cv>" for cv in CVS)
     assert set(workspace.facts) == {"a.txt", "b.txt", "c.txt"}
 
 
@@ -216,7 +218,7 @@ async def test_rnk_002_rank_does_not_change_when_attributes_change():
 
 
 async def test_err_002_failed_extraction_keeps_the_other_results():
-    llm = FakeLlm(failing=("Extract the facts.\nCV of a nurse",))
+    llm = FakeLlm(failing=("<cv>\nCV of a nurse",))
 
     workspace = await _pipeline(llm).build(TODAY)
 
@@ -228,7 +230,7 @@ async def test_err_002_failed_extraction_keeps_the_other_results():
 
 async def test_err_001_failure_list_names_the_item_and_the_cause():
     error = LlmOutputError("completion with model m returned no answer", "raw reply")
-    llm = FakeLlm(failing=("Extract the facts.\nCV of a nurse",), error=error)
+    llm = FakeLlm(failing=("<cv>\nCV of a nurse",), error=error)
 
     workspace = await _pipeline(llm).build(TODAY)
 
@@ -238,7 +240,7 @@ async def test_err_001_failure_list_names_the_item_and_the_cause():
 
 
 async def test_err_002_failed_recommendation_leaves_that_pair_without_a_recommendation():
-    llm = FakeLlm(failing=("Match.\nWelder wanted",))
+    llm = FakeLlm(failing=("<job_description>\nWelder wanted",))
 
     workspace = await _pipeline(llm).build(TODAY)
 
@@ -262,6 +264,17 @@ async def test_mis_002_cv_with_a_failed_embedding_stays_in_every_ranking_last():
     assert workspace.ranked_jobs["a.txt"] == (("j1.txt", None), ("j2.txt", None))
     assert "a.txt" in workspace.facts
     assert workspace.failures[0].item_id == "a.txt"
+
+
+async def test_dec_016_pipeline_sends_the_prompt_file_as_the_system_text():
+    llm = FakeLlm()
+
+    await _pipeline(llm).build(TODAY)
+
+    assert llm.system_texts == {
+        CvFactsReply: {EXTRACT_TEMPLATE},
+        RecommendationReply: {MATCH_TEMPLATE},
+    }
 
 
 async def test_dec_008_an_error_that_is_not_an_llm_error_is_not_caught():

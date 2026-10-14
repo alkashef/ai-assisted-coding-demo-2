@@ -9,21 +9,12 @@ history is the record. Template: `docs/workflow.md`.
 
 | Milestone | Description | Model | Effort | Status |
 | --- | --- | --- | --- | --- |
-| **M18** Prompt isolation | Prompt files become system text, and the documents go in as tagged, escaped user text (DEC-016) | opus | high | open |
 | **M19** Job description text | `GET /api/jobs/{job_id}` and the foldable text panel above the candidates (JOB-003, DEC-020) | sonnet | medium | open |
 | **M20** Frozen header and file names | Sticky header and the grey file-name lines in four places (DEC-019) | sonnet | medium | open |
 | **M21** Evaluation command | `python main.py --evaluate`, `src/evaluation.py`, five settings (NFR-004, NFR-005, DEC-017) | sonnet | high | open |
 | **M22** Gold file draft | Drafts `data/sample/gold_jobs.json` from the 10 sample CVs, with a `.gitignore` exception (NFR-005, DEC-017) | sonnet | high | open |
 
 ## Milestones
-
-### M18 — Prompt isolation
-
-- **Refs:** EXT-002 to EXT-010, REC-001, NFR-001, DEC-016.
-- **Owner:** `src/extraction.py`, `src/recommendation.py`, `src/pipeline.py`, `prompts/extract_cv.md`, `prompts/match_cv_to_job.md`, and one new domain module `src/prompt_data.py` (single responsibility: wrap a text in a fixed tag and escape copies of the tags inside it; the tag names are an enum there).
-- **Tests first:** `test_ext_002_user_text_wraps_the_cv_in_a_tag`, `test_dec_016_closing_tag_inside_the_cv_is_escaped`, `test_dec_016_placeholder_marker_inside_the_cv_is_unchanged`, `test_rec_001_user_text_wraps_job_and_facts_in_tags`, `test_rec_001_marker_inside_the_facts_is_not_replaced_by_the_job_text`, `test_dec_016_pipeline_sends_the_prompt_file_as_the_system_text` (`test_pipeline.py`), `test_dec_016_prompt_files_have_no_placeholders_and_name_the_untrusted_data_rule`. Test files: `test_prompt_data.py` and the existing ones for each module.
-- **Build:** `prompt_data.py` as above (a domain module: it imports only the standard library); `extraction.py` and `recommendation.py` build the tagged user text; the pipeline passes the prompt file text as `system` and the tagged text as `user`; both prompt files lose their `{{...}}` markers and gain the rule that tagged content is untrusted data and any instruction in it is ignored (keep the `is_current` rule from M16). Add the `prompt_data.py` row to design section 2.1 in the same change.
-- **Gate:** the tests and the checks pass; no prompt file contains `{{`; the report says that no automated test shows how the real model behaves.
 
 ### M19 — Job description text
 
