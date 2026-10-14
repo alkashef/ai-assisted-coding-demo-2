@@ -1,3 +1,5 @@
+import re
+
 from src.llm_schemas import RecommendationReply
 from src.recommendation import build_recommendation_request, recommendation_from_reply
 from src.records import CvFacts, Education, Job, Recommendation, YearMonth
@@ -57,6 +59,12 @@ def test_rec_001_request_contains_the_job_text_and_the_candidate_facts():
         "2018-05",
     ):
         assert fact in request
+
+
+def test_rec_001_facts_carry_is_current_beside_end():
+    request = build_recommendation_request(TEMPLATE, "Looking for a data analyst.", make_facts())
+
+    assert re.search(r'"end": null,\s+"is_current": true,', request)
 
 
 def test_dec_006_request_excludes_name_address_and_contact_details():

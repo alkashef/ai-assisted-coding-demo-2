@@ -1,8 +1,10 @@
 """Tests for `src/workspace_views.py`."""
 
+from dataclasses import replace
+
 import pytest
 
-from src.records import CvFacts, Document, Failure, Recommendation, Workspace
+from src.records import CvFacts, Document, Failure, Job, Recommendation, Workspace, YearMonth
 from src.workspace_views import (
     CandidateItem,
     FailureItem,
@@ -96,6 +98,18 @@ def test_cnd_001_candidate_detail_has_text_and_extracted_attributes() -> None:
     assert detail.extracted is not None
     assert detail.extracted.name == "Ada Invented"
     assert detail.extracted.last_job is None
+
+
+def test_ext_009_last_job_view_has_is_current() -> None:
+    job = Job("Clerk", "Acme", None, None, YearMonth(2015, 2), None, False, None)
+    workspace = replace(_ranked_workspace(), facts={"a.txt": replace(_facts("Ada"), jobs=(job,))})
+
+    extracted = candidate_detail(workspace, "a.txt").extracted
+
+    assert extracted is not None
+    assert extracted.last_job is not None
+    assert extracted.last_job.end is None
+    assert extracted.last_job.is_current is False
 
 
 def test_cnd_001_candidate_detail_unknown_candidate_raises() -> None:

@@ -12,7 +12,7 @@ import { config } from "./config.js";
  * @typedef {{ id: string, name: string | null }} CandidateSummary
  * @typedef {{ item_id: string, cause: string }} FailureSummary
  * @typedef {{ title: string | null, employer: string | null, city: string | null,
- *   country: string | null, start: string, end: string | null,
+ *   country: string | null, start: string, end: string | null, is_current: boolean,
  *   description: string | null }} LastJob
  * @typedef {{ name: string | null, current_title: string | null, skills: string[],
  *   city: string | null, country: string | null, highest_degree: string | null,

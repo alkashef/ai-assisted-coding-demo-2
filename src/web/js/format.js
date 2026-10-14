@@ -98,6 +98,18 @@ export function formatParts(parts) {
 }
 
 /**
+ * Formats the end of a job: its month, "Present" for a current job, or "Not available" (DEC-015).
+ * @param {import("./api.js").LastJob} job The job.
+ * @returns {string} The end text.
+ */
+function formatJobEnd(job) {
+  if (job.end !== null) {
+    return job.end;
+  }
+  return job.is_current ? "Present" : config.notAvailableText;
+}
+
+/**
  * Formats the last job of a CV on one line (EXT-009).
  * @param {import("./api.js").LastJob | null | undefined} job The last job.
  * @returns {string} Title, employer, place, period and description, or "Not available".
@@ -108,7 +120,7 @@ export function formatLastJob(job) {
   }
   const role = [displayText(job.title), displayText(job.employer)].join(" at ");
   const place = formatParts([job.city, job.country]);
-  const period = `${job.start} to ${job.end ?? "Present"}`;
+  const period = `${job.start} to ${formatJobEnd(job)}`;
   const description = job.description === null ? "" : ` ${job.description}`;
   return `${role}, ${place}. ${period}.${description}`;
 }

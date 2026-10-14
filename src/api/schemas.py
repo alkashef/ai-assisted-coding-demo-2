@@ -24,7 +24,10 @@ class _ViewModel(BaseModel):
 
 
 class LastJob(_ViewModel):
-    """The last job of a candidate (EXT-009). A `null` end means "Present"."""
+    """The last job of a candidate (EXT-009).
+
+    A `null` end with `is_current` means "Present"; without it the end is unknown (DEC-015).
+    """
 
     title: str | None
     employer: str | None
@@ -32,6 +35,7 @@ class LastJob(_ViewModel):
     country: str | None
     start: str
     end: str | None
+    is_current: bool
     description: str | None
 
 

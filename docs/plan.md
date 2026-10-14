@@ -9,7 +9,6 @@ history is the record. Template: `docs/workflow.md`.
 
 | Milestone | Description | Model | Effort | Status |
 | --- | --- | --- | --- | --- |
-| **M17** Show the unknown end | `is_current` in the API's last job, the recommendation facts, and the page ("Present" or "Not available") (DEC-015) | sonnet | medium | open |
 | **M18** Prompt isolation | Prompt files become system text, and the documents go in as tagged, escaped user text (DEC-016) | opus | high | open |
 | **M19** Job description text | `GET /api/jobs/{job_id}` and the foldable text panel above the candidates (JOB-003, DEC-020) | sonnet | medium | open |
 | **M20** Frozen header and file names | Sticky header and the grey file-name lines in four places (DEC-019) | sonnet | medium | open |
@@ -17,14 +16,6 @@ history is the record. Template: `docs/workflow.md`.
 | **M22** Gold file draft | Drafts `data/sample/gold_jobs.json` from the 10 sample CVs, with a `.gitignore` exception (NFR-005, DEC-017) | sonnet | high | open |
 
 ## Milestones
-
-### M17 — Show the unknown end
-
-- **Refs:** CAL-007, CAL-009, EXT-009, REC-001, MIS-001, DEC-015, DEC-006.
-- **Owner:** `src/workspace_views.py`, `src/api/schemas.py`, `src/recommendation.py`, `src/web/js/format.js`, `src/web/js/api.js`.
-- **Tests first:** `test_ext_009_last_job_view_has_is_current` (unit, `test_workspace_views.py`), `test_ext_009_api_last_job_has_end_and_is_current` (e2e), `test_rec_001_facts_carry_is_current_beside_end` (`test_recommendation.py`), `formatLastJob shows Present only when is_current` and `formatLastJob shows Not available for an unknown end` (`format.test.js`), `test_ext_009_ui_unknown_end_shows_not_available` and `test_ext_009_ui_current_job_shows_present` (UI).
-- **Build:** the last-job object gets `is_current`; the recommendation facts JSON gets `is_current` beside `end` (still no name or contact detail); `format.js` shows "Present" only for a current job and "Not available" for an unknown end; update the API typedef in `api.js`.
-- **Gate:** the tests and the checks pass; design section 4 matches the API shape.
 
 ### M18 — Prompt isolation
 

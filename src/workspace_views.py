@@ -44,7 +44,10 @@ class FailureItem:
 
 @dataclass(frozen=True)
 class LastJob:
-    """The last job of a CV in display form (EXT-009). A `None` end means "Present"."""
+    """The last job of a CV in display form (EXT-009).
+
+    A `None` end with `is_current` means "Present"; without it the end is unknown (DEC-015).
+    """
 
     title: str | None
     employer: str | None
@@ -52,6 +55,7 @@ class LastJob:
     country: str | None
     start: str
     end: str | None
+    is_current: bool
     description: str | None
 
 
@@ -238,6 +242,7 @@ def _last_job(facts: CvFacts) -> LastJob | None:
         country=job.country,
         start=_format_month(job.start),
         end=None if job.end is None else _format_month(job.end),
+        is_current=job.is_current,
         description=job.description,
     )
 

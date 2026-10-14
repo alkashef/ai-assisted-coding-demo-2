@@ -60,16 +60,29 @@ test("test_mis_001_parts_skip_missing_values", () => {
   assert.equal(formatParts([null, undefined]), "Not available");
 });
 
-test("test_ext_009_last_job_renders_on_one_line", () => {
-  const job = {
-    title: "Analyst",
-    employer: "Acme",
-    city: null,
-    country: "Peru",
-    start: "2019-03",
-    end: null,
-    description: null,
-  };
-  assert.equal(formatLastJob(job), "Analyst at Acme, Peru. 2019-03 to Present.");
+const lastJob = {
+  title: "Analyst",
+  employer: "Acme",
+  city: null,
+  country: "Peru",
+  start: "2019-03",
+  end: null,
+  is_current: true,
+  description: null,
+};
+
+test("formatLastJob shows Present only when is_current", () => {
+  assert.equal(formatLastJob(lastJob), "Analyst at Acme, Peru. 2019-03 to Present.");
+  assert.equal(
+    formatLastJob({ ...lastJob, end: "2020-01", is_current: false }),
+    "Analyst at Acme, Peru. 2019-03 to 2020-01.",
+  );
   assert.equal(formatLastJob(null), "Not available");
+});
+
+test("formatLastJob shows Not available for an unknown end", () => {
+  assert.equal(
+    formatLastJob({ ...lastJob, is_current: false }),
+    "Analyst at Acme, Peru. 2019-03 to Not available.",
+  );
 });

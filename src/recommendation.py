@@ -63,6 +63,7 @@ def _job_for_request(job: Job) -> dict[str, object]:
         "country": job.country,
         "start": _month_text(job.start),
         "end": _month_text(job.end),
+        "is_current": job.is_current,
         "description": job.description,
     }
 

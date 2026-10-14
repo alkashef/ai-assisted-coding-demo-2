@@ -46,6 +46,22 @@ def test_rnk_003_ui_card_shows_extracted_and_calculated_attributes(
     expect(card.locator(".chips-item")).to_have_text(["SQL", "Tableau"])
 
 
+def test_ext_009_ui_current_job_shows_present(page: Page, ranked_base_url: str) -> None:
+    _open_job(page, ranked_base_url)
+
+    expect(page.locator(".card").nth(0).locator(".card-last-job")).to_contain_text(
+        "2019-03 to Present."
+    )
+
+
+def test_ext_009_ui_unknown_end_shows_not_available(page: Page, ranked_base_url: str) -> None:
+    _open_job(page, ranked_base_url)
+
+    last_job = page.locator(".card").nth(2).locator(".card-last-job")
+    expect(last_job).to_contain_text("2015-02 to Not available.")
+    expect(last_job).not_to_contain_text("Present")
+
+
 def test_rec_001_ui_card_shows_the_recommendation_badge_and_reason(
     page: Page, ranked_base_url: str
 ) -> None:

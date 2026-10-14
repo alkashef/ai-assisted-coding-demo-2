@@ -92,7 +92,6 @@ def test_rnk_003_ranked_candidate_has_extracted_and_calculated_attributes(
     assert candidate["extracted"]["highest_degree"] == "MSc"
     assert candidate["extracted"]["last_job"]["employer"] == "Beta"
     assert candidate["extracted"]["last_job"]["start"] == "2018-05"
-    assert candidate["extracted"]["last_job"]["end"] is None
     assert candidate["calculated"] == {
         "total_months": 100,
         "job_count": 2,
@@ -101,6 +100,13 @@ def test_rnk_003_ranked_candidate_has_extracted_and_calculated_attributes(
         "months_since_graduation": 150,
         "currently_employed": True,
     }
+
+
+def test_ext_009_api_last_job_has_end_and_is_current(tmp_path: Path) -> None:
+    last_job = _ranked(tmp_path)[1]["extracted"]["last_job"]
+
+    assert last_job["end"] is None
+    assert last_job["is_current"] is True
 
 
 def test_rec_001_ranked_candidate_has_a_recommendation(tmp_path: Path) -> None:

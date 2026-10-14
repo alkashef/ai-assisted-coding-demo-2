@@ -5,6 +5,7 @@ import threading
 import time
 from collections.abc import Iterator
 from contextlib import contextmanager
+from dataclasses import replace
 from pathlib import Path
 
 import pytest
@@ -84,10 +85,25 @@ def _ranked_workspace() -> Workspace:
         ),
         education=(),
     )
+    bo = replace(
+        _facts("Bo Invented"),
+        jobs=(
+            Job(
+                title="Site Clerk",
+                employer="Harbor Invented",
+                city=None,
+                country=None,
+                start=YearMonth(2015, 2),
+                end=None,
+                is_current=False,
+                description=None,
+            ),
+        ),
+    )
     return Workspace(
         cvs=(Document("a.txt", "Cv A"), Document("b.txt", "Cv B"), Document("c.txt", "Cv C")),
         jobs=(Document("j1.txt", "Data Analyst\nInvented details"),),
-        facts={"a.txt": ada, "b.txt": _facts("Bo Invented")},
+        facts={"a.txt": ada, "b.txt": bo},
         attributes={
             "a.txt": CalculatedAttributes(
                 total_months=106,
