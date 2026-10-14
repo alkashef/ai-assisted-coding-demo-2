@@ -83,7 +83,7 @@ This builds the same workspace as a normal run (the same OpenAI calls), then pri
 - NFR-004: for each job description in `data/sample/ground_truth.tsv`, at least `EVAL_MIN_RELEVANT_IN_TOP_K` of the `EVAL_TOP_K` best-ranked CVs are labeled relevant.
 - NFR-005: at least `EVAL_MIN_DATE_MATCH_PERCENT` percent of the jobs in `data/sample/gold_jobs.json` have an extracted job with the same start month, end month and current marker.
 
-NFR-004 and NFR-005 need one manual run by you with the real service. The automated tests use fakes, and `--evaluate` has not been run against the live service. `gold_jobs.json` is in the format described in `docs/design.md` section 3 and counts only after you have reviewed it.
+NFR-004 and NFR-005 need one manual run by you with the real service. The automated tests use fakes, and `--evaluate` has not been run against the live service. `gold_jobs.json` is in the format described in `docs/design.md` section 3. It is committed (the one file of `data/sample/` that is) and is a draft by the assistant from the 10 sample CVs: you must review it against the CVs before NFR-005 counts.
 
 ## How to test
 

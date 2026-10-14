@@ -7,6 +7,9 @@ config/.env
 # User data, generated data, models, logs
 data/*
 !data/.gitkeep
+!data/sample/
+data/sample/*
+!data/sample/gold_jobs.json
 models/
 logs/
 *.before-*

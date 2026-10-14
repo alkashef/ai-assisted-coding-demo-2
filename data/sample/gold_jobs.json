@@ -1,0 +1,180 @@
+{
+  "attribution": "Data: TalentCLEF 2026 Task A, version 0.3.0 (English development set). DOI: 10.5281/zenodo.19652670. License: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/). Job dates drafted by an AI assistant from the CV text; not yet reviewed by the user.",
+  "cvs": {
+    "10004.txt": [
+      {
+        "start": "2021-01",
+        "end": null,
+        "is_current": true
+      },
+      {
+        "start": "2018-06",
+        "end": "2020-12",
+        "is_current": false
+      },
+      {
+        "start": "2017-05",
+        "end": "2017-08",
+        "is_current": false
+      }
+    ],
+    "11695.txt": [
+      {
+        "start": "2021-01",
+        "end": null,
+        "is_current": true
+      },
+      {
+        "start": "2017-06",
+        "end": "2020-12",
+        "is_current": false
+      },
+      {
+        "start": "2014-03",
+        "end": "2017-05",
+        "is_current": false
+      }
+    ],
+    "13882.txt": [
+      {
+        "start": "2021-01",
+        "end": null,
+        "is_current": true
+      },
+      {
+        "start": "2018-06",
+        "end": "2020-12",
+        "is_current": false
+      },
+      {
+        "start": "2017-05",
+        "end": "2017-08",
+        "is_current": false
+      }
+    ],
+    "15087.txt": [
+      {
+        "start": "2021-01",
+        "end": null,
+        "is_current": true
+      },
+      {
+        "start": "2017-06",
+        "end": "2020-12",
+        "is_current": false
+      },
+      {
+        "start": "2015-08",
+        "end": "2017-05",
+        "is_current": false
+      }
+    ],
+    "15639.txt": [
+      {
+        "start": "2019-03",
+        "end": null,
+        "is_current": true
+      },
+      {
+        "start": "2015-06",
+        "end": "2019-02",
+        "is_current": false
+      },
+      {
+        "start": "2012-08",
+        "end": "2015-05",
+        "is_current": false
+      }
+    ],
+    "17635.txt": [
+      {
+        "start": "2021-01",
+        "end": null,
+        "is_current": true
+      },
+      {
+        "start": "2017-06",
+        "end": "2020-12",
+        "is_current": false
+      },
+      {
+        "start": "2014-08",
+        "end": "2017-05",
+        "is_current": false
+      },
+      {
+        "start": "2012-07",
+        "end": "2014-07",
+        "is_current": false
+      }
+    ],
+    "22710.txt": [
+      {
+        "start": "2021-01",
+        "end": null,
+        "is_current": true
+      },
+      {
+        "start": "2017-06",
+        "end": "2020-12",
+        "is_current": false
+      },
+      {
+        "start": "2014-03",
+        "end": "2017-05",
+        "is_current": false
+      }
+    ],
+    "367.txt": [
+      {
+        "start": "2022-03",
+        "end": null,
+        "is_current": true
+      },
+      {
+        "start": "2019-06",
+        "end": "2022-02",
+        "is_current": false
+      },
+      {
+        "start": "2017-01",
+        "end": "2019-05",
+        "is_current": false
+      }
+    ],
+    "8553.txt": [
+      {
+        "start": "2021-01",
+        "end": null,
+        "is_current": true
+      },
+      {
+        "start": "2018-06",
+        "end": "2020-12",
+        "is_current": false
+      },
+      {
+        "start": "2016-03",
+        "end": "2018-05",
+        "is_current": false
+      }
+    ],
+    "8568.txt": [
+      {
+        "start": "2020-01",
+        "end": null,
+        "is_current": true
+      },
+      {
+        "start": "2016-06",
+        "end": "2019-12",
+        "is_current": false
+      },
+      {
+        "start": "2015-05",
+        "end": "2015-08",
+        "is_current": false
+      }
+    ]
+  }
+}
