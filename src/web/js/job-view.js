@@ -32,7 +32,7 @@ function fillRecommendation(card, recommendation) {
 }
 
 /**
- * Fills the head of a card: rank, name, place, score and the last job.
+ * Fills the head of a card: rank, name, file name, place, score and the last job.
  * @param {ParentNode} card The cloned card.
  * @param {number} rank The position in the ranking, from 1.
  * @param {import("./api.js").RankedCandidate} candidate The ranked candidate.
@@ -44,8 +44,8 @@ function fillHead(card, rank, candidate) {
   setText(name, displayText(extracted?.name), isMissing(extracted?.name));
   name.setAttribute("href", config.routes.candidates + encodeURIComponent(candidate.candidate_id));
   part(card, ".card-rank").textContent = String(rank);
+  part(card, ".card-file").textContent = candidate.candidate_id;
   part(card, ".card-sub").textContent = [
-    `CV ${candidate.candidate_id}`,
     displayText(extracted?.current_title),
     formatParts([extracted?.city, extracted?.country]),
   ].join(". ");
@@ -83,8 +83,9 @@ function buildCard(template, rank, candidate) {
 export function renderJobView(host, templates, job, ranked) {
   const view = /** @type {DocumentFragment} */ (templates.view.content.cloneNode(true));
   part(view, "[data-field='title']").textContent = job.title;
+  part(view, "[data-field='file']").textContent = job.id;
   part(view, "[data-field='meta']").textContent =
-    `Job description ${job.id}. All ${ranked.length} candidates, best match first.`;
+    `All ${ranked.length} candidates, best match first.`;
   part(view, "[data-field='job-text']").textContent = job.text;
   part(view, "[data-cards]").replaceChildren(
     ...ranked.map((candidate, index) => buildCard(templates.card, index + 1, candidate)),

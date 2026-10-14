@@ -24,7 +24,7 @@ def test_cnd_002_ui_shows_extracted_and_calculated_attributes(
 ) -> None:
     _open_candidate(page, ranked_base_url)
 
-    expect(page.locator(".page-head-meta")).to_have_text("CV a.txt. Senior Data Analyst")
+    expect(page.locator(".page-head-meta")).to_have_text("Senior Data Analyst")
     labels = page.locator(".facts-label")
     expect(labels).to_have_text(
         [

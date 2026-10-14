@@ -30,9 +30,7 @@ def test_rnk_003_ui_card_shows_extracted_and_calculated_attributes(
     _open_job(page, ranked_base_url)
 
     card = page.locator(".card").first
-    expect(card.locator(".card-sub")).to_have_text(
-        "CV a.txt. Senior Data Analyst. Boston, United States"
-    )
+    expect(card.locator(".card-sub")).to_have_text("Senior Data Analyst. Boston, United States")
     stats = card.locator(".stat-value")
     expect(stats).to_have_text(
         ["106 months", "3", "35.3 months", "1 gap: 5 months", "Yes", "102 months"]

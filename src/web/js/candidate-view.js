@@ -34,7 +34,7 @@ function buildRankedJob(template, rank, job) {
 }
 
 /**
- * Fills the head of the view: the name and the line under it.
+ * Fills the head of the view: the name, the file name and the title.
  * @param {ParentNode} view The cloned view.
  * @param {import("./api.js").CandidateDetail} candidate The candidate.
  * @returns {void}
@@ -46,10 +46,8 @@ function fillHead(view, candidate) {
     displayText(extracted?.name),
     isMissing(extracted?.name),
   );
-  part(view, "[data-field='meta']").textContent = [
-    `CV ${candidate.candidate_id}`,
-    displayText(extracted?.current_title),
-  ].join(". ");
+  part(view, "[data-field='file']").textContent = candidate.candidate_id;
+  part(view, "[data-field='meta']").textContent = displayText(extracted?.current_title);
 }
 
 /**

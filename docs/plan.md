@@ -9,19 +9,10 @@ history is the record. Template: `docs/workflow.md`.
 
 | Milestone | Description | Model | Effort | Status |
 | --- | --- | --- | --- | --- |
-| **M20** Frozen header and file names | Sticky header and the grey file-name lines in four places (DEC-019) | sonnet | medium | open |
 | **M21** Evaluation command | `python main.py --evaluate`, `src/evaluation.py`, five settings (NFR-004, NFR-005, DEC-017) | sonnet | high | open |
 | **M22** Gold file draft | Drafts `data/sample/gold_jobs.json` from the 10 sample CVs, with a `.gitignore` exception (NFR-005, DEC-017) | sonnet | high | open |
 
 ## Milestones
-
-### M20 — Frozen header and file names
-
-- **Refs:** DEC-019, LST-001, LST-002, CND-001, JOB-002.
-- **Owner:** `src/web/css/layout.css`, `src/web/css/detail.css`, `src/web/index.html`, `src/web/js/list-view.js`, `src/web/js/job-view.js`, `src/web/js/candidate-view.js`.
-- **Tests first:** `test_dec_019_ui_header_stays_at_the_top_when_the_page_scrolls`, `test_dec_019_ui_navigation_file_name_is_below_the_label_in_small_grey_text`, `test_dec_019_ui_card_file_name_is_below_the_name`, `test_dec_019_ui_job_and_candidate_headings_show_the_file_name_below_the_title`.
-- **Build:** `.app-header` becomes sticky (plain CSS, no JavaScript); the file name moves to a second line in the small size and `--color-muted` in the navigation items, the candidate cards, and the candidate and job view headings, as in DEC-019; the heading meta lines lose the "CV <id>." and "Job description <id>." text. The existing UI tests that look for that text change because the design changed: say so in the report. The ranked job rows stay as they are.
-- **Gate:** the tests and the checks pass; `docs/frontend/README.md` matches; the report lists the changed UI tests.
 
 ### M21 — Evaluation command
 
