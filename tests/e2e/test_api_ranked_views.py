@@ -169,3 +169,21 @@ def test_cnd_001_unknown_candidate_returns_404_with_a_detail(tmp_path: Path) -> 
     assert detail.status_code == 404
     assert "missing.txt" in detail.json()["detail"]
     assert ranked_jobs.status_code == 404
+
+
+def test_job_003_api_returns_the_job_text(tmp_path: Path) -> None:
+    response = _client(tmp_path).get("/api/jobs/j1.txt")
+
+    assert response.status_code == 200
+    assert response.json() == {
+        "id": "j1.txt",
+        "title": "Data Analyst",
+        "text": "Data Analyst\nDetails",
+    }
+
+
+def test_job_003_api_unknown_job_returns_404_with_detail(tmp_path: Path) -> None:
+    response = _client(tmp_path).get("/api/jobs/nope.txt")
+
+    assert response.status_code == 404
+    assert "nope.txt" in response.json()["detail"]

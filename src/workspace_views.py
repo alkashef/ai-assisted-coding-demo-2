@@ -1,8 +1,8 @@
 """Builds the data for each read from the workspace (design section 2.1).
 
 Pure functions over the in-memory workspace. They do not rank, call an LLM or read files: the
-pipeline has done that already. Implements LST-001, LST-002, ERR-001, JOB-002, RNK-003, REC-001
-and CND-001 to CND-003.
+pipeline has done that already. Implements LST-001, LST-002, ERR-001, JOB-002, JOB-003, RNK-003,
+REC-001 and CND-001 to CND-003.
 """
 
 from dataclasses import dataclass
@@ -24,6 +24,15 @@ class JobItem:
 
     job_id: str
     title: str
+
+
+@dataclass(frozen=True)
+class JobDetail:
+    """The raw text of one job description with its ID and title (JOB-003)."""
+
+    job_id: str
+    title: str
+    text: str
 
 
 @dataclass(frozen=True)
@@ -115,6 +124,25 @@ class NotFoundError(Exception):
 def job_list(workspace: Workspace) -> list[JobItem]:
     """Lists the job descriptions with their titles (LST-001)."""
     return [JobItem(job.doc_id, _first_line(job.text)) for job in workspace.jobs]
+
+
+def job_detail(workspace: Workspace, job_id: str) -> JobDetail:
+    """Returns the ID, title and raw text of one job description (JOB-003).
+
+    Args:
+        workspace: The finished workspace.
+        job_id: The ID of the job description.
+
+    Returns:
+        The detail.
+
+    Raises:
+        NotFoundError: If no job description has the ID.
+    """
+    for job in workspace.jobs:
+        if job.doc_id == job_id:
+            return JobDetail(job.doc_id, _first_line(job.text), job.text)
+    raise NotFoundError(f"Job description not found: {job_id}")
 
 
 def candidate_list(workspace: Workspace) -> list[CandidateItem]:

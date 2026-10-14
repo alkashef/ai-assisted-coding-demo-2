@@ -9,6 +9,7 @@ import { config } from "./config.js";
 
 /**
  * @typedef {{ id: string, title: string }} JobSummary
+ * @typedef {{ id: string, title: string, text: string }} JobDetail
  * @typedef {{ id: string, name: string | null }} CandidateSummary
  * @typedef {{ item_id: string, cause: string }} FailureSummary
  * @typedef {{ title: string | null, employer: string | null, city: string | null,
@@ -60,6 +61,16 @@ async function listJobs() {
 }
 
 /**
+ * Gets the raw text of one job description (JOB-003).
+ * @param {string} jobId The job description ID.
+ * @returns {Promise<JobDetail>} The ID, title and text.
+ */
+async function getJob(jobId) {
+  const path = `${config.api.jobs}/${encodeURIComponent(jobId)}`;
+  return /** @type {JobDetail} */ (await getJson(path));
+}
+
+/**
  * Gets the candidates (LST-002).
  * @returns {Promise<CandidateSummary[]>} The ID and name of each candidate.
  */
@@ -108,6 +119,7 @@ async function listRankedJobs(candidateId) {
 /** The reads that the views need. Pass it into the code that uses it, so tests can use a fake. */
 export const api = Object.freeze({
   listJobs,
+  getJob,
   listCandidates,
   listFailures,
   listRankedCandidates,

@@ -10,6 +10,14 @@ class JobSummary(BaseModel):
     title: str
 
 
+class JobDetail(BaseModel):
+    """A job description with its raw text (JOB-003)."""
+
+    id: str
+    title: str
+    text: str
+
+
 class CandidateSummary(BaseModel):
     """A candidate in the list (LST-002). A missing name is `null` (MIS-001)."""
 

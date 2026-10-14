@@ -9,20 +9,11 @@ history is the record. Template: `docs/workflow.md`.
 
 | Milestone | Description | Model | Effort | Status |
 | --- | --- | --- | --- | --- |
-| **M19** Job description text | `GET /api/jobs/{job_id}` and the foldable text panel above the candidates (JOB-003, DEC-020) | sonnet | medium | open |
 | **M20** Frozen header and file names | Sticky header and the grey file-name lines in four places (DEC-019) | sonnet | medium | open |
 | **M21** Evaluation command | `python main.py --evaluate`, `src/evaluation.py`, five settings (NFR-004, NFR-005, DEC-017) | sonnet | high | open |
 | **M22** Gold file draft | Drafts `data/sample/gold_jobs.json` from the 10 sample CVs, with a `.gitignore` exception (NFR-005, DEC-017) | sonnet | high | open |
 
 ## Milestones
-
-### M19 — Job description text
-
-- **Refs:** JOB-003, JOB-002, DEC-020.
-- **Owner:** `src/workspace_views.py` (`job_detail`), `src/api/jobs.py`, `src/api/schemas.py`, `src/web/js/api.js`, `src/web/js/job-view.js`, `src/web/js/main.js`, `src/web/index.html`, `src/web/css/detail.css`, `src/web/css/theme.css`.
-- **Tests first:** `test_job_003_job_detail_returns_id_title_and_text` and `test_job_003_job_detail_unknown_id_raises_not_found` (unit), `test_job_003_api_returns_the_job_text` and `test_job_003_api_unknown_job_returns_404_with_detail` (e2e), `test_job_003_ui_selecting_a_job_shows_its_text_above_the_ranked_candidates` (UI).
-- **Build:** `job_detail` and the route `GET /api/jobs/{job_id}`; `getJob` in `api.js`; the job view loads the job and the ranked candidates together and shows the text in a `<details open>` panel titled "Job description text" above the cards, with the `.doc` component in a scrollable box. The maximum height is a new token in `theme.css`; the stale-response guard from M15 applies to it. The text is inserted with `textContent`. Update `docs/frontend/README.md` if it differs.
-- **Gate:** the tests and the checks pass; design section 4 lists the endpoint.
 
 ### M20 — Frozen header and file names
 

@@ -2,8 +2,8 @@
 /**
  * @module job-view
  * Owns the job view: the ranked candidate cards of one job description (JOB-002, RNK-003,
- * REC-001, MIS-001, MIS-002). Fills templates with `textContent`. Does not call the API (main.js
- * passes the data in) and does not format values (format.js does).
+ * REC-001, MIS-001, MIS-002) and its text (JOB-003). Fills templates with `textContent`. Does not
+ * call the API (main.js passes the data in) and does not format values (format.js does).
  */
 
 import { fillFacts, fillStats, part, setText } from "./attribute-fill.js";
@@ -72,10 +72,11 @@ function buildCard(template, rank, candidate) {
 }
 
 /**
- * Shows the job view: the job title and one card per candidate, best first.
+ * Shows the job view: the job title, the job description text and one card per candidate, best
+ * first.
  * @param {HTMLElement} host The element that holds the view.
  * @param {{ view: HTMLTemplateElement, card: HTMLTemplateElement }} templates The templates.
- * @param {import("./api.js").JobSummary} job The selected job description.
+ * @param {import("./api.js").JobDetail} job The selected job description with its text.
  * @param {import("./api.js").RankedCandidate[]} ranked The candidates, best first.
  * @returns {void}
  */
@@ -84,6 +85,7 @@ export function renderJobView(host, templates, job, ranked) {
   part(view, "[data-field='title']").textContent = job.title;
   part(view, "[data-field='meta']").textContent =
     `Job description ${job.id}. All ${ranked.length} candidates, best match first.`;
+  part(view, "[data-field='job-text']").textContent = job.text;
   part(view, "[data-cards]").replaceChildren(
     ...ranked.map((candidate, index) => buildCard(templates.card, index + 1, candidate)),
   );

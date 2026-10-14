@@ -8,12 +8,14 @@ from src.records import CvFacts, Document, Failure, Job, Recommendation, Workspa
 from src.workspace_views import (
     CandidateItem,
     FailureItem,
+    JobDetail,
     JobItem,
     NotFoundError,
     RankedJob,
     candidate_detail,
     candidate_list,
     failure_list,
+    job_detail,
     job_list,
     ranked_candidates,
     ranked_job_list,
@@ -126,3 +128,14 @@ def test_cnd_003_ranked_job_list_has_titles_and_scores() -> None:
 def test_cnd_003_ranked_job_list_unknown_candidate_raises() -> None:
     with pytest.raises(NotFoundError):
         ranked_job_list(_ranked_workspace(), "nope.txt")
+
+
+def test_job_003_job_detail_returns_id_title_and_text() -> None:
+    assert job_detail(_workspace(), "j1.txt") == JobDetail(
+        "j1.txt", "Data Analyst", "Data Analyst\nDetails"
+    )
+
+
+def test_job_003_job_detail_unknown_id_raises_not_found() -> None:
+    with pytest.raises(NotFoundError):
+        job_detail(_workspace(), "nope.txt")

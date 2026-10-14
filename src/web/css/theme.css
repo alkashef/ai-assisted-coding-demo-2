@@ -25,6 +25,7 @@
   --space-6: 32px;
   --radius: 6px;
   --measure: 72ch;
+  --doc-max-height: 280px;
   --font-body: system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-mono: ui-monospace, "Cascadia Mono", consolas, monospace;
   --size-small: 13px;

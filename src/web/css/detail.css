@@ -317,3 +317,16 @@
   overflow-wrap: anywhere;
   white-space: pre-wrap;
 }
+
+.job-text {
+  margin: 0 0 var(--space-4);
+}
+
+.job-text > .doc-summary {
+  cursor: pointer;
+}
+
+.doc-text-job {
+  max-height: var(--doc-max-height);
+  overflow-y: auto;
+}

@@ -46,7 +46,10 @@ function handleCrash(error) {
  * @returns {Promise<void>}
  */
 async function showJob(job) {
-  const ranked = await api.listRankedCandidates(job.id);
+  const [detail, ranked] = await Promise.all([
+    api.getJob(job.id),
+    api.listRankedCandidates(job.id),
+  ]);
   if (!isRoute(location.hash, "jobs", job.id)) {
     return;
   }
@@ -54,7 +57,7 @@ async function showJob(job) {
     view: /** @type {HTMLTemplateElement} */ (required("#job-view-template")),
     card: /** @type {HTMLTemplateElement} */ (required("#candidate-card-template")),
   };
-  renderJobView(required("[data-view]"), templates, job, ranked);
+  renderJobView(required("[data-view]"), templates, detail, ranked);
 }
 
 /**

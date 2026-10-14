@@ -96,3 +96,18 @@ def test_mis_002_ui_candidate_without_a_score_is_listed_last(
     expect(last.locator(".card-name")).to_have_text("Bo Invented")
     expect(last.locator(".card-score-value")).to_have_text("Not available")
     expect(last.locator(".badge")).to_have_text("Not available")
+
+
+def test_job_003_ui_selecting_a_job_shows_its_text_above_the_ranked_candidates(
+    page: Page, ranked_base_url: str
+) -> None:
+    _open_job(page, ranked_base_url)
+
+    panel = page.locator("details.doc")
+    expect(panel.locator("summary")).to_have_text("Job description text")
+    expect(panel.locator(".doc-text")).to_have_text("Data Analyst\nInvented details")
+    panel_box = panel.bounding_box()
+    card_box = page.locator(".card").first.bounding_box()
+    assert panel_box is not None
+    assert card_box is not None
+    assert panel_box["y"] < card_box["y"]
